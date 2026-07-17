@@ -1,0 +1,132 @@
+[
+  {
+    "id": "chat",
+    "name": "对话",
+    "color": "gray"
+  },
+  {
+    "id": "coding",
+    "name": "编程",
+    "color": "blue"
+  },
+  {
+    "id": "image",
+    "name": "图像",
+    "color": "pink"
+  },
+  {
+    "id": "research",
+    "name": "研究",
+    "color": "yellow"
+  },
+  {
+    "id": "mcp",
+    "name": "MCP",
+    "color": "gray"
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "color": "blue"
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "color": "sky"
+  },
+  {
+    "id": "hosting",
+    "name": "部署",
+    "color": "sky"
+  },
+  {
+    "id": "database",
+    "name": "数据库",
+    "color": "gray"
+  },
+  {
+    "id": "open-source",
+    "name": "开源",
+    "color": "gray"
+  },
+  {
+    "id": "automation",
+    "name": "自动化",
+    "color": "gray"
+  },
+  {
+    "id": "bot",
+    "name": "机器人",
+    "color": "cyan"
+  },
+  {
+    "id": "api",
+    "name": "API",
+    "color": "gray"
+  },
+  {
+    "id": "storage",
+    "name": "存储",
+    "color": "gray"
+  },
+  {
+    "id": "ui",
+    "name": "UI",
+    "color": "pink"
+  },
+  {
+    "id": "icons",
+    "name": "图标",
+    "color": "pink"
+  },
+  {
+    "id": "fonts",
+    "name": "字体",
+    "color": "gray"
+  },
+  {
+    "id": "video",
+    "name": "视频",
+    "color": "purple"
+  },
+  {
+    "id": "music",
+    "name": "音乐",
+    "color": "purple"
+  },
+  {
+    "id": "docs",
+    "name": "文档",
+    "color": "yellow"
+  },
+  {
+    "id": "english",
+    "name": "英语",
+    "color": "yellow"
+  },
+  {
+    "id": "paper",
+    "name": "论文",
+    "color": "gray"
+  },
+  {
+    "id": "pdf",
+    "name": "PDF",
+    "color": "gray"
+  },
+  {
+    "id": "ebook",
+    "name": "电子书",
+    "color": "gray"
+  },
+  {
+    "id": "ai",
+    "name": "AI",
+    "color": "green"
+  },
+  {
+    "id": "self-hosted",
+    "name": "自托管",
+    "color": "gray"
+  }
+]

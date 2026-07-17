@@ -1,0 +1,8 @@
+[
+  { "id": "ai", "name": "AI", "description": "模型、编程与研究工具", "icon": "sparkles", "color": "violet" },
+  { "id": "development", "name": "开发与云", "description": "代码、部署与基础设施", "icon": "code-2", "color": "blue" },
+  { "id": "telegram", "name": "Telegram", "description": "机器人、频道与媒体工具", "icon": "send", "color": "cyan" },
+  { "id": "design", "name": "设计", "description": "界面、素材与协作", "icon": "palette", "color": "rose" },
+  { "id": "learning", "name": "学习", "description": "文档、课程与研究", "icon": "graduation-cap", "color": "amber" },
+  { "id": "media", "name": "影音", "description": "音乐、视频与自托管媒体", "icon": "play", "color": "green" }
+]

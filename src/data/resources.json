@@ -1,0 +1,1379 @@
+[
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "description": "OpenAI 的通用对话、写作和分析助手。",
+    "icon": "openai",
+    "categoryId": "ai",
+    "tagIds": [
+      "chat",
+      "research"
+    ],
+    "featured": true,
+    "featuredRank": 1,
+    "createdAt": "2025-01-12",
+    "updatedAt": "2026-06-01",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://chatgpt.com",
+      "docs": "https://help.openai.com"
+    },
+    "detailPath": "chatgpt.md",
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录为通用对话、写作与分析入口，适合在同一工作流中快速启动。",
+      "tutorials": []
+    },
+    "alternativeIds": [
+      "claude",
+      "gemini"
+    ]
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "description": "擅长长文理解、写作与代码协作的 AI 助手。",
+    "icon": "claude",
+    "categoryId": "ai",
+    "tagIds": [
+      "chat",
+      "coding",
+      "research"
+    ],
+    "featured": true,
+    "featuredRank": 2,
+    "createdAt": "2025-01-13",
+    "updatedAt": "2026-05-20",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "ios",
+      "android"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://claude.ai",
+      "docs": "https://docs.anthropic.com"
+    },
+    "detailPath": "claude.md",
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录其长文理解、写作与代码协作能力，适合需要处理较长上下文的任务。",
+      "tutorials": []
+    },
+    "alternativeIds": [
+      "chatgpt",
+      "gemini"
+    ]
+  },
+  {
+    "id": "codex",
+    "name": "Codex",
+    "description": "面向真实代码库的 AI 编程代理。",
+    "icon": "codex",
+    "categoryId": "ai",
+    "tagIds": [
+      "coding",
+      "github"
+    ],
+    "featured": true,
+    "featuredRank": 3,
+    "createdAt": "2025-01-14",
+    "updatedAt": "2026-06-15",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://chatgpt.com/codex",
+      "docs": "https://developers.openai.com/codex"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录为面向真实代码库的编码代理入口，适合有明确仓库任务的开发工作。",
+      "tutorials": []
+    },
+    "alternativeIds": [
+      "cursor",
+      "vscode"
+    ]
+  },
+  {
+    "id": "gemini",
+    "name": "Gemini",
+    "description": "Google 提供的多模态 AI 助手与开发平台。",
+    "icon": "gemini",
+    "categoryId": "ai",
+    "tagIds": [
+      "chat",
+      "image",
+      "research"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-02",
+    "updatedAt": "2026-05-10",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://gemini.google.com",
+      "docs": "https://ai.google.dev"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "description": "集成 AI 工作流的代码编辑器。",
+    "icon": "cursor",
+    "categoryId": "ai",
+    "tagIds": [
+      "coding",
+      "github"
+    ],
+    "featured": true,
+    "featuredRank": 5,
+    "createdAt": "2025-02-04",
+    "updatedAt": "2026-05-12",
+    "rating": "S",
+    "platforms": [
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://cursor.com",
+      "docs": "https://docs.cursor.com"
+    },
+    "detailPath": "cursor.md",
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录其围绕代码编辑器组织的 AI 工作流，适合将辅助能力放在本地开发环境中。",
+      "tutorials": []
+    },
+    "alternativeIds": [
+      "codex",
+      "vscode"
+    ]
+  },
+  {
+    "id": "notebooklm",
+    "name": "NotebookLM",
+    "description": "基于资料库进行问答、摘要和研究的 AI 笔记工具。",
+    "icon": "notebooklm",
+    "categoryId": "ai",
+    "tagIds": [
+      "research",
+      "docs"
+    ],
+    "featured": true,
+    "featuredRank": 8,
+    "createdAt": "2025-02-09",
+    "updatedAt": "2026-04-20",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://notebooklm.google.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录其以资料集为中心的问答和摘要能力，适合围绕已有材料进行研究。",
+      "tutorials": []
+    }
+  },
+  {
+    "id": "perplexity",
+    "name": "Perplexity",
+    "description": "带来源引用的 AI 搜索与研究工具。",
+    "icon": "perplexity",
+    "categoryId": "ai",
+    "tagIds": [
+      "research",
+      "chat"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-11",
+    "updatedAt": "2026-04-02",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.perplexity.ai"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "hugging-face",
+    "name": "Hugging Face",
+    "description": "开源模型、数据集与机器学习社区。",
+    "icon": "huggingface",
+    "categoryId": "ai",
+    "tagIds": [
+      "open-source",
+      "research",
+      "api"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-15",
+    "updatedAt": "2026-03-18",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "open-source",
+    "links": {
+      "website": "https://huggingface.co",
+      "github": "https://github.com/huggingface"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "n8n",
+    "name": "n8n",
+    "description": "可自托管的工作流自动化平台。",
+    "icon": "n8n",
+    "categoryId": "ai",
+    "tagIds": [
+      "automation",
+      "open-source",
+      "api",
+      "self-hosted"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-19",
+    "updatedAt": "2026-03-25",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "linux"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "open-source",
+    "links": {
+      "website": "https://n8n.io",
+      "github": "https://github.com/n8n-io/n8n",
+      "docs": "https://docs.n8n.io"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown",
+    "alternativeIds": []
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "description": "代码托管、协作与开源项目的基础平台。",
+    "icon": "github",
+    "categoryId": "development",
+    "tagIds": [
+      "github",
+      "coding",
+      "open-source"
+    ],
+    "featured": true,
+    "featuredRank": 4,
+    "createdAt": "2025-01-10",
+    "updatedAt": "2026-06-01",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://github.com",
+      "docs": "https://docs.github.com"
+    },
+    "detailPath": "github.md",
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录为代码协作与开源项目的基础入口，项目源码、Issue 与文档常可在此追溯。",
+      "tutorials": []
+    },
+    "alternativeIds": []
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "description": "边缘网络、Pages、Workers、R2 与安全服务平台。",
+    "icon": "cloudflare",
+    "categoryId": "development",
+    "tagIds": [
+      "cloudflare",
+      "hosting",
+      "storage",
+      "api"
+    ],
+    "featured": true,
+    "featuredRank": 6,
+    "createdAt": "2025-01-11",
+    "updatedAt": "2026-06-10",
+    "rating": "S",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.cloudflare.com",
+      "docs": "https://developers.cloudflare.com"
+    },
+    "detailPath": "cloudflare.md",
+    "relatedKnowledge": [
+      "https://wiki.hfdz1119.top/#/notes/server-cloudflare",
+      "https://wiki.hfdz1119.top/#/notes/image-hosting"
+    ],
+    "difficulty": "advanced",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录其 Pages、Workers、R2 与安全服务组合，适合静态站和边缘应用部署。",
+      "tutorials": [
+        {
+          "title": "服务器与 Cloudflare",
+          "url": "https://wiki.hfdz1119.top/Cloudflare/server-cloudflare.html"
+        },
+        {
+          "title": "Cloudflare R2 图床",
+          "url": "https://wiki.hfdz1119.top/Cloudflare/image-hosting.html"
+        }
+      ]
+    },
+    "alternativeIds": [
+      "vercel",
+      "railway"
+    ]
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "description": "面向前端与全栈应用的部署平台。",
+    "icon": "vercel",
+    "categoryId": "development",
+    "tagIds": [
+      "hosting",
+      "github"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-20",
+    "updatedAt": "2026-04-10",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://vercel.com",
+      "docs": "https://vercel.com/docs"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "description": "开源的 Postgres 后端服务平台。",
+    "icon": "supabase",
+    "categoryId": "development",
+    "tagIds": [
+      "database",
+      "api",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-22",
+    "updatedAt": "2026-04-12",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "open-source",
+    "links": {
+      "website": "https://supabase.com",
+      "github": "https://github.com/supabase/supabase",
+      "docs": "https://supabase.com/docs"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "description": "容器化开发、分发和运行环境。",
+    "icon": "docker",
+    "categoryId": "development",
+    "tagIds": [
+      "self-hosted",
+      "open-source",
+      "automation"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-25",
+    "updatedAt": "2026-03-10",
+    "rating": "S",
+    "platforms": [
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://www.docker.com",
+      "docs": "https://docs.docker.com"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "vscode",
+    "name": "Visual Studio Code",
+    "description": "可扩展的跨平台代码编辑器。",
+    "icon": "vscode",
+    "categoryId": "development",
+    "tagIds": [
+      "coding",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-02-27",
+    "updatedAt": "2026-03-09",
+    "rating": "S",
+    "platforms": [
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://code.visualstudio.com",
+      "github": "https://github.com/microsoft/vscode"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "raycast",
+    "name": "Raycast",
+    "description": "面向 macOS 的高效启动器和自动化工具。",
+    "icon": "raycast",
+    "categoryId": "development",
+    "tagIds": [
+      "automation",
+      "coding"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-01",
+    "updatedAt": "2026-03-08",
+    "rating": "A",
+    "platforms": [
+      "mac"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.raycast.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "railway",
+    "name": "Railway",
+    "description": "简化服务部署与数据库托管的平台。",
+    "icon": "railway",
+    "categoryId": "development",
+    "tagIds": [
+      "hosting",
+      "database"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-04",
+    "updatedAt": "2026-03-03",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://railway.app"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "coolify",
+    "name": "Coolify",
+    "description": "开源的自托管 PaaS 部署面板。",
+    "icon": "coolify",
+    "categoryId": "development",
+    "tagIds": [
+      "hosting",
+      "self-hosted",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-05",
+    "updatedAt": "2026-03-04",
+    "rating": "A",
+    "platforms": [
+      "linux",
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://coolify.io",
+      "github": "https://github.com/coollabsio/coolify"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "description": "支持机器人、频道与多端同步的通信平台。",
+    "icon": "telegram",
+    "categoryId": "telegram",
+    "tagIds": [
+      "bot",
+      "api",
+      "storage"
+    ],
+    "featured": true,
+    "featuredRank": 7,
+    "createdAt": "2025-01-16",
+    "updatedAt": "2026-05-22",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://telegram.org",
+      "docs": "https://core.telegram.org"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录其多端通信与 Bot API 能力，适合频道、通知和自动化消息场景。",
+      "tutorials": []
+    },
+    "alternativeIds": []
+  },
+  {
+    "id": "telegram-bot-api",
+    "name": "Telegram Bot API",
+    "description": "构建 Telegram 机器人的官方 API 文档。",
+    "icon": "telegram",
+    "categoryId": "telegram",
+    "tagIds": [
+      "bot",
+      "api",
+      "docs"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-06",
+    "updatedAt": "2026-04-03",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "proprietary",
+    "links": {
+      "website": "https://core.telegram.org/bots/api"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "telegraf",
+    "name": "Telegraf",
+    "description": "Node.js 生态的 Telegram Bot 框架。",
+    "icon": "telegram",
+    "categoryId": "telegram",
+    "tagIds": [
+      "bot",
+      "api",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-07",
+    "updatedAt": "2026-03-02",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "linux",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://telegraf.js.org",
+      "github": "https://github.com/telegraf/telegraf"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "tdlib",
+    "name": "TDLib",
+    "description": "构建 Telegram 客户端的跨平台库。",
+    "icon": "telegram",
+    "categoryId": "telegram",
+    "tagIds": [
+      "api",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-09",
+    "updatedAt": "2026-02-20",
+    "rating": "B",
+    "platforms": [
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://core.telegram.org/tdlib",
+      "github": "https://github.com/tdlib/td"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "telegram-desktop",
+    "name": "Telegram Desktop",
+    "description": "Telegram 的官方桌面客户端。",
+    "icon": "telegram",
+    "categoryId": "telegram",
+    "tagIds": [
+      "open-source",
+      "storage"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-10",
+    "updatedAt": "2026-02-18",
+    "rating": "A",
+    "platforms": [
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://desktop.telegram.org",
+      "github": "https://github.com/telegramdesktop/tdesktop"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "description": "在线协作界面与原型设计工具。",
+    "icon": "figma",
+    "categoryId": "design",
+    "tagIds": [
+      "ui",
+      "icons"
+    ],
+    "featured": true,
+    "featuredRank": 9,
+    "createdAt": "2025-01-20",
+    "updatedAt": "2026-05-01",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.figma.com",
+      "docs": "https://help.figma.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown",
+    "editorial": {
+      "verdict": "收录其在线协作与原型设计能力，适合产品界面和设计交付协作。",
+      "tutorials": []
+    },
+    "alternativeIds": [
+      "canva"
+    ]
+  },
+  {
+    "id": "canva",
+    "name": "Canva",
+    "description": "模板化平面设计与内容创作工具。",
+    "icon": "canva",
+    "categoryId": "design",
+    "tagIds": [
+      "ui",
+      "image"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-11",
+    "updatedAt": "2026-04-05",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.canva.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "lucide",
+    "name": "Lucide",
+    "description": "简洁、一致的开源图标库。",
+    "icon": "lucide",
+    "categoryId": "design",
+    "tagIds": [
+      "icons",
+      "open-source",
+      "ui"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-12",
+    "updatedAt": "2026-03-01",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://lucide.dev",
+      "github": "https://github.com/lucide-icons/lucide"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "simple-icons",
+    "name": "Simple Icons",
+    "description": "品牌标志 SVG 图标集合。",
+    "icon": "simple-icons",
+    "categoryId": "design",
+    "tagIds": [
+      "icons",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-13",
+    "updatedAt": "2026-02-28",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://simpleicons.org",
+      "github": "https://github.com/simple-icons/simple-icons"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "google-fonts",
+    "name": "Google Fonts",
+    "description": "可直接用于网页的开放字体目录。",
+    "icon": "google-fonts",
+    "categoryId": "design",
+    "tagIds": [
+      "fonts",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-14",
+    "updatedAt": "2026-02-25",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://fonts.google.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "coolors",
+    "name": "Coolors",
+    "description": "快速生成和管理配色方案。",
+    "icon": "coolors",
+    "categoryId": "design",
+    "tagIds": [
+      "ui"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-16",
+    "updatedAt": "2026-02-20",
+    "rating": "B",
+    "platforms": [
+      "web",
+      "ios"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://coolors.co"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "docsify",
+    "name": "Docsify",
+    "description": "无需构建步骤的 Markdown 文档站生成器。",
+    "icon": "docsify",
+    "categoryId": "learning",
+    "tagIds": [
+      "docs",
+      "open-source",
+      "github"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-18",
+    "updatedAt": "2026-03-18",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://docsify.js.org",
+      "github": "https://github.com/docsifyjs/docsify"
+    },
+    "difficulty": "easy",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "mdn",
+    "name": "MDN Web Docs",
+    "description": "权威的 Web 平台技术参考文档。",
+    "icon": "mdn",
+    "categoryId": "learning",
+    "tagIds": [
+      "docs",
+      "coding"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-19",
+    "updatedAt": "2026-04-01",
+    "rating": "S",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://developer.mozilla.org"
+    },
+    "difficulty": "easy",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "coursera",
+    "name": "Coursera",
+    "description": "涵盖大学课程和职业技能的在线学习平台。",
+    "icon": "coursera",
+    "categoryId": "learning",
+    "tagIds": [
+      "docs",
+      "english"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-20",
+    "updatedAt": "2026-03-15",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.coursera.org"
+    },
+    "difficulty": "easy",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "arxiv",
+    "name": "arXiv",
+    "description": "开放获取的学术论文预印本平台。",
+    "icon": "arxiv",
+    "categoryId": "learning",
+    "tagIds": [
+      "paper",
+      "research",
+      "pdf"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-21",
+    "updatedAt": "2026-03-16",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://arxiv.org"
+    },
+    "difficulty": "easy",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "z-library",
+    "name": "Internet Archive",
+    "description": "保存图书、音频、视频和网页的开放数字档案。",
+    "icon": "archive",
+    "categoryId": "learning",
+    "tagIds": [
+      "ebook",
+      "pdf",
+      "docs"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-22",
+    "updatedAt": "2026-03-17",
+    "rating": "A",
+    "platforms": [
+      "web"
+    ],
+    "languages": [
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://archive.org"
+    },
+    "difficulty": "easy",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "deepl",
+    "name": "DeepL",
+    "description": "面向写作与理解的机器翻译工具。",
+    "icon": "deepl",
+    "categoryId": "learning",
+    "tagIds": [
+      "english",
+      "ai"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-23",
+    "updatedAt": "2026-04-08",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.deepl.com"
+    },
+    "difficulty": "easy",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "description": "视频创作、学习与播放平台。",
+    "icon": "youtube",
+    "categoryId": "media",
+    "tagIds": [
+      "video",
+      "music"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-24",
+    "updatedAt": "2026-04-16",
+    "rating": "S",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.youtube.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "description": "音乐发现和流媒体播放服务。",
+    "icon": "spotify",
+    "categoryId": "media",
+    "tagIds": [
+      "music"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-25",
+    "updatedAt": "2026-04-15",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.spotify.com"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "plex",
+    "name": "Plex",
+    "description": "管理个人媒体库并在多端播放。",
+    "icon": "plex",
+    "categoryId": "media",
+    "tagIds": [
+      "video",
+      "music",
+      "self-hosted"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-26",
+    "updatedAt": "2026-03-12",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "freemium",
+    "license": "proprietary",
+    "links": {
+      "website": "https://www.plex.tv"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "jellyfin",
+    "name": "Jellyfin",
+    "description": "开源的个人媒体服务器。",
+    "icon": "jellyfin",
+    "categoryId": "media",
+    "tagIds": [
+      "video",
+      "music",
+      "self-hosted",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-27",
+    "updatedAt": "2026-03-11",
+    "rating": "A",
+    "platforms": [
+      "web",
+      "ios",
+      "android",
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://jellyfin.org",
+      "github": "https://github.com/jellyfin/jellyfin"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "vlc",
+    "name": "VLC",
+    "description": "跨平台开源媒体播放器。",
+    "icon": "vlc",
+    "categoryId": "media",
+    "tagIds": [
+      "video",
+      "music",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-28",
+    "updatedAt": "2026-03-07",
+    "rating": "A",
+    "platforms": [
+      "ios",
+      "android",
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://www.videolan.org/vlc"
+    },
+    "difficulty": "medium",
+    "networkAccess": "unknown"
+  },
+  {
+    "id": "obs",
+    "name": "OBS Studio",
+    "description": "开源的视频录制和直播软件。",
+    "icon": "obs",
+    "categoryId": "media",
+    "tagIds": [
+      "video",
+      "open-source"
+    ],
+    "featured": false,
+    "createdAt": "2025-03-29",
+    "updatedAt": "2026-03-06",
+    "rating": "S",
+    "platforms": [
+      "mac",
+      "windows",
+      "linux"
+    ],
+    "languages": [
+      "zh",
+      "en"
+    ],
+    "pricing": "free",
+    "license": "open-source",
+    "links": {
+      "website": "https://obsproject.com",
+      "github": "https://github.com/obsproject/obs-studio"
+    },
+    "difficulty": "advanced",
+    "networkAccess": "unknown"
+  }
+]
