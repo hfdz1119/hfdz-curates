@@ -1,9 +1,9 @@
 {
-  "name": "hfdz Navigation Hub",
-  "short_name": "Navigation Hub",
-  "description": "会飞的猪的个人资源中心",
-  "theme_color": "#111318",
-  "background_color": "#111318",
+  "name": "HFDZ Curates | 会飞的猪精选",
+  "short_name": "HFDZ Curates",
+  "description": "会飞的猪持续整理的个人数字收藏。",
+  "theme_color": "#0F1117",
+  "background_color": "#0F1117",
   "display": "standalone",
   "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }
