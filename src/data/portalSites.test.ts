@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { portalAppearance } from "./portalAppearance";
 import { portalSites } from "./portalSites";
 
 describe("HFDZ Home portal sites", () => {
@@ -18,5 +19,16 @@ describe("HFDZ Home portal sites", () => {
 
   it("has one primary destination", () => {
     expect(portalSites.filter((site) => site.emphasis === "primary")).toHaveLength(1);
+  });
+
+  it("uses typed icon sources with safe custom assets", () => {
+    for (const site of portalSites) {
+      expect(["auto", "custom", "lucide"]).toContain(site.icon.mode);
+      if (site.icon.mode === "custom") expect(site.icon.src.startsWith("/") || site.icon.src.startsWith(`https://${site.hostname}/`)).toBe(true);
+    }
+  });
+
+  it("uses a user-managed local WebP background", () => {
+    expect(portalAppearance.backgroundImage).toBe("/backgrounds/home-background.webp");
   });
 });

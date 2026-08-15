@@ -1,12 +1,17 @@
 import { Activity, BookOpen, Image, NotebookPen, UserRound, type LucideIcon } from "lucide-react";
 
+export type PortalIcon =
+  | { mode: "custom"; src: string; fallback: LucideIcon }
+  | { mode: "auto"; fallback: LucideIcon }
+  | { mode: "lucide"; icon: LucideIcon };
+
 export type PortalSite = {
   id: string;
   name: string;
   description: string;
   url: string;
   hostname: string;
-  icon: LucideIcon;
+  icon: PortalIcon;
   emphasis: "primary" | "standard";
   access: "public" | "authenticated";
 };
@@ -18,7 +23,7 @@ export const portalSites: PortalSite[] = [
     description: "作品、经历与关于我的一切。",
     url: "https://me.hfdz1119.top",
     hostname: "me.hfdz1119.top",
-    icon: UserRound,
+    icon: { mode: "custom", src: "/favicon.svg", fallback: UserRound },
     emphasis: "primary",
     access: "public",
   },
@@ -28,7 +33,7 @@ export const portalSites: PortalSite[] = [
     description: "写作、整理与沉淀想法的私人空间。",
     url: "https://hfdz-knowledge.huijin398.workers.dev",
     hostname: "hfdz-knowledge.huijin398.workers.dev",
-    icon: NotebookPen,
+    icon: { mode: "auto", fallback: NotebookPen },
     emphasis: "standard",
     access: "authenticated",
   },
@@ -38,7 +43,7 @@ export const portalSites: PortalSite[] = [
     description: "经过筛选后公开分享的知识与记录。",
     url: "https://wiki.hfdz1119.top",
     hostname: "wiki.hfdz1119.top",
-    icon: BookOpen,
+    icon: { mode: "auto", fallback: BookOpen },
     emphasis: "standard",
     access: "public",
   },
@@ -48,7 +53,7 @@ export const portalSites: PortalSite[] = [
     description: "上传、管理并获取稳定的图片链接。",
     url: "https://image.hfdz1119.top",
     hostname: "image.hfdz1119.top",
-    icon: Image,
+    icon: { mode: "auto", fallback: Image },
     emphasis: "standard",
     access: "public",
   },
@@ -58,7 +63,7 @@ export const portalSites: PortalSite[] = [
     description: "查看网站与服务当前是否正常运行。",
     url: "https://status.hfdz1119.top",
     hostname: "status.hfdz1119.top",
-    icon: Activity,
+    icon: { mode: "auto", fallback: Activity },
     emphasis: "standard",
     access: "public",
   },
