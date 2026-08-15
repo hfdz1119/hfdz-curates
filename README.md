@@ -18,7 +18,7 @@ npm run build
 首页入口集中维护在 `src/data/portalSites.ts`。第一版固定包含：
 
 - 个人主页：`me.hfdz1119.top`
-- 私人笔记：HFDZ Knowledge Workers 地址
+- 私人笔记：`https://kb.hfdz1119.top`
 - 公开知识库：`wiki.hfdz1119.top`
 - 图片管理：`image.hfdz1119.top`
 - 服务状态：`status.hfdz1119.top`
@@ -30,6 +30,7 @@ npm run build
 - 自定义背景固定读取 `public/backgrounds/home-background.webp`；替换同名文件即可更新，缺失时自动回退到 Aurora 背景。
 - 首页的“背景”按钮也可粘贴图床提供的 HTTPS 图片直链；页面会先检查图片是否可加载，再保存到当前浏览器的 localStorage。
 - URL 背景只在当前浏览器生效，不会同步到其他设备；“恢复默认”会清除本地覆盖并重新使用项目内置背景。
+- 首页“色彩”按钮提供与个人主页一致的 Aurora、Sakura、Lavender 和 Sunset 四套配色，并保存在当前浏览器的 `hfdz-navigation:palette` 中。
 - 建议使用不超过 1 MB 的 1920×1080 WebP，主体尽量靠近画面中央，以适配桌面与手机裁切。
 - 每个入口的 `icon` 支持 `custom`、`auto` 和 `lucide` 三种模式。
 - `custom` 使用明确的本地或本站图片地址；`auto` 尝试站点根目录的 `favicon.ico`；加载失败后使用配置中的 Lucide 图标。

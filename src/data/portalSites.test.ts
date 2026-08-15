@@ -13,12 +13,18 @@ describe("HFDZ Home portal sites", () => {
       const url = new URL(site.url);
       expect(url.protocol).toBe("https:");
       expect(url.hostname).toBe(site.hostname);
-      expect(url.hostname === "hfdz1119.top" || url.hostname.endsWith(".hfdz1119.top") || url.hostname === "hfdz-knowledge.huijin398.workers.dev").toBe(true);
+      expect(url.hostname === "hfdz1119.top" || url.hostname.endsWith(".hfdz1119.top")).toBe(true);
     }
   });
 
   it("has one primary destination", () => {
     expect(portalSites.filter((site) => site.emphasis === "primary")).toHaveLength(1);
+  });
+
+  it("uses the first-party knowledge workspace domain", () => {
+    const notes = portalSites.find((site) => site.id === "notes");
+    expect(notes?.url).toBe("https://kb.hfdz1119.top");
+    expect(notes?.hostname).toBe("kb.hfdz1119.top");
   });
 
   it("uses typed icon sources with safe custom assets", () => {

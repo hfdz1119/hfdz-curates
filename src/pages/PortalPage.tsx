@@ -3,12 +3,15 @@ import { ArrowUpRight, LockKeyhole } from "lucide-react";
 import { PortalBackground } from "../components/PortalBackground";
 import { PortalBackgroundSettings } from "../components/PortalBackgroundSettings";
 import { PortalIcon } from "../components/PortalIcon";
+import { PortalPalettePicker } from "../components/PortalPalettePicker";
 import { portalAppearance } from "../data/portalAppearance";
 import { portalSites } from "../data/portalSites";
 import { portalBackgroundStore } from "../stores/portalBackground";
+import { portalPaletteStore } from "../stores/portalPalette";
 
 export function PortalPage() {
   const [customBackgroundUrl, setCustomBackgroundUrl] = useState(() => portalBackgroundStore.get());
+  const [palette, setPalette] = useState(() => portalPaletteStore.get());
 
   const applyBackground = (url: string) => {
     const normalizedUrl = portalBackgroundStore.set(url);
@@ -20,10 +23,17 @@ export function PortalPage() {
     setCustomBackgroundUrl(null);
   };
 
-  return <main className="portal-page" id="main-content">
+  const changePalette = (nextPalette: Parameters<typeof portalPaletteStore.set>[0]) => {
+    setPalette(portalPaletteStore.set(nextPalette));
+  };
+
+  return <main className="portal-page" id="main-content" data-portal-palette={palette}>
     <PortalBackground src={customBackgroundUrl ?? portalAppearance.backgroundImage} fallbackSrc={portalAppearance.backgroundImage} />
     <section className="portal-glass" aria-labelledby="portal-title">
-      <PortalBackgroundSettings currentUrl={customBackgroundUrl} onApply={applyBackground} onReset={resetBackground} />
+      <div className="portal-appearance-controls" aria-label="首页外观">
+        <PortalPalettePicker value={palette} onChange={changePalette} />
+        <PortalBackgroundSettings currentUrl={customBackgroundUrl} onApply={applyBackground} onReset={resetBackground} />
+      </div>
       <header className="portal-intro">
         <p className="portal-kicker">会飞的猪的数字空间</p>
         <h1 id="portal-title">HFDZ <span>Home</span></h1>
