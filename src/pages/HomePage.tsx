@@ -7,7 +7,6 @@ import { track } from "../stores/analytics";
 import { favoritesStore } from "../stores/favorites";
 import { ResourceCard } from "../components/ResourceCard";
 import { SearchPanel } from "../components/SearchPanel";
-import { ServiceStrip } from "../components/ServiceStrip";
 
 type FilterState = { query: string; categoryId?: string; tagId?: string; rating?: Resource["rating"]; platform?: Platform; pricing?: Pricing; license?: Resource["license"]; difficulty?: Difficulty; networkAccess?: NetworkAccess };
 
@@ -25,7 +24,7 @@ export function HomePage({ favoriteIds, toggleFavorite, setFavoriteIds }: { favo
   const exportFavorites = () => { const blob = new Blob([favoritesStore.export()], { type: "application/json" }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "hfdz-curates-favorites.json"; link.click(); URL.revokeObjectURL(url); };
   const importFavorites = async (file?: File) => { if (!file) return; try { setFavoriteIds(favoritesStore.import(await file.text(), new Set(resources.map((item) => item.id)))); } catch { alert("收藏文件无效，未导入任何内容。"); } };
 
-  return <main>
+  return <main className="curates-page" id="main-content">
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-copy">
         <p className="eyebrow">会飞的猪精选</p>
@@ -33,19 +32,16 @@ export function HomePage({ favoriteIds, toggleFavorite, setFavoriteIds }: { favo
         <p className="hero-statement">把值得长期使用的东西，留在这里。</p>
         <p className="hero-description">这是会飞的猪持续整理的个人数字收藏：工具、知识与灵感，经过长期使用、筛选与反复回访后，才会进入这座小型档案。</p>
       </div>
-      <aside className="curator-note" aria-label="编辑手记">
-        <p className="curator-kicker">Curator’s note</p>
-        <p>不追逐榜单，也不追逐数量。这里留下的，应该是下一次仍会打开的东西。</p>
-        <dl>
-          <div><dt>编辑</dt><dd>会飞的猪</dd></div>
-          <div><dt>档案状态</dt><dd>持续整理中</dd></div>
-          <div><dt>收录标准</dt><dd>值得保存，也值得回访</dd></div>
-        </dl>
+      <aside className="curator-status" aria-label="数字收藏状态">
+        <p className="curator-kicker">Currently curating</p>
+        <p className="curator-count">41 <span>resources</span></p>
+        <p className="curator-meta">持续更新中<br />Maintained by 会飞的猪</p>
       </aside>
+      <div className="discovery-dock">
+        <p>Explore the archive</p>
+        <SearchPanel {...filters} categories={categories} tags={tags} onChange={update} />
+      </div>
     </section>
-    <SearchPanel {...filters} categories={categories} tags={tags} onChange={update} />
-    <ServiceStrip />
-
     {!filtered && <>
       <section className="content-section featured-section">
         <SectionHeading kicker="编辑精选" title="Featured" caption="先说为什么值得，再决定是否访问" />

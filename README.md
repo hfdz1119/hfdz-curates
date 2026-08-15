@@ -1,6 +1,6 @@
-# Navigation Hub
+# HFDZ Home
 
-`nav.hfdz1119.top` 的独立 React 资源中心。它与现有作品集、知识库、图床和状态 Worker 分离部署。
+`hfdz1119.top` 的个人网页入口。首页只收录会飞的猪自己的网页；原 HFDZ Curates 资源库保留在 `/curates`，不出现在首页导航中。
 
 ## Local development
 
@@ -11,30 +11,35 @@ npm test
 npm run build
 ```
 
-打开 Vite 输出的本地地址。生产构建目录为 `dist/`。
+生产构建目录为 `dist/`。
 
-## Content workflow
+## Portal links
 
-- 新增分类：更新 `src/data/categories.json`。
-- 新增标签：更新 `src/data/tags.json`。
-- 新增资源：更新 `src/data/resources.json`，再运行 `npm test`；资源 ID、分类、标签和链接均由 Zod 验证。
-- 长文详情：将 Markdown 放进 `src/content/resources/`，并在资源的 `detailPath` 中引用文件名。
-- 精选资源：设置 `featured: true` 和唯一的 `featuredRank`。最近新增由 `createdAt` 自动排序。
-- 本地图标：放入 `public/icons/<icon>.svg`；没有图标时界面会使用首字母回退。
+首页入口集中维护在 `src/data/portalSites.ts`。第一版固定包含：
+
+- 个人主页：`me.hfdz1119.top`
+- 私人笔记：HFDZ Knowledge Workers 地址
+- 公开知识库：`wiki.hfdz1119.top`
+- 图片管理：`image.hfdz1119.top`
+- 服务状态：`status.hfdz1119.top`
+
+入口页不请求实时状态，不包含服务器 IP、后台路径或凭据。状态详情由 Uptime Kuma 页面独立提供。
+
+## Curates compatibility
+
+- 资源库入口：`/curates`
+- 资源详情：`/resources/:id`
+- 分类、标签与资源仍由 `src/data/*.json` 管理。
+- 收藏与搜索历史继续保存在当前设备的 localStorage。
+- 资源详情 Markdown 继续放在 `src/content/resources/`。
 
 ## Cloudflare Pages
-
-创建独立 Cloudflare Pages 项目，连接该项目所在 Git 仓库，设置：
 
 - Framework preset: `Vite`
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Node.js: `22` 或更新的 LTS
 
-部署成功后在 Pages 的 Custom Domains 中绑定 `nav.hfdz1119.top`。`public/_redirects` 已包含 SPA 路由回退，资源详情链接可直接访问。
+先使用 Pages 预览地址完成验收，再将 `hfdz1119.top` 从 Portfolio 项目切换到 HFDZ Home。Portfolio 应先在 `me.hfdz1119.top` 验收通过。`public/_redirects` 保留 SPA 深链接回退，并只为已知 Portfolio 路径设置精确 301。
 
-可选地在 Pages 环境变量中设置 `VITE_CF_ANALYTICS_TOKEN`。未设置时不会加载 Cloudflare Web Analytics beacon。
-
-## Boundaries
-
-浏览器收藏与搜索历史仅存于当前设备的 localStorage。导出文件为版本化 JSON，导入会合并有效资源 ID，不会覆盖已有收藏。状态栏只请求公开的 `https://status.hfdz1119.top/api/services`，不会包含私有路径或凭据。
+Cloudflare 项目、生产分支、自定义域名及重定向规则必须在仪表盘中单独核验；本仓库配置不能证明线上状态。

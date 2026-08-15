@@ -1,0 +1,65 @@
+import { Activity, BookOpen, Image, NotebookPen, UserRound, type LucideIcon } from "lucide-react";
+
+export type PortalSite = {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  hostname: string;
+  icon: LucideIcon;
+  emphasis: "primary" | "standard";
+  access: "public" | "authenticated";
+};
+
+export const portalSites: PortalSite[] = [
+  {
+    id: "portfolio",
+    name: "个人主页",
+    description: "作品、经历与关于我的一切。",
+    url: "https://me.hfdz1119.top",
+    hostname: "me.hfdz1119.top",
+    icon: UserRound,
+    emphasis: "primary",
+    access: "public",
+  },
+  {
+    id: "notes",
+    name: "私人笔记",
+    description: "写作、整理与沉淀想法的私人空间。",
+    url: "https://hfdz-knowledge.huijin398.workers.dev",
+    hostname: "hfdz-knowledge.huijin398.workers.dev",
+    icon: NotebookPen,
+    emphasis: "standard",
+    access: "authenticated",
+  },
+  {
+    id: "knowledge",
+    name: "公开知识库",
+    description: "经过筛选后公开分享的知识与记录。",
+    url: "https://wiki.hfdz1119.top",
+    hostname: "wiki.hfdz1119.top",
+    icon: BookOpen,
+    emphasis: "standard",
+    access: "public",
+  },
+  {
+    id: "images",
+    name: "图片管理",
+    description: "上传、管理并获取稳定的图片链接。",
+    url: "https://image.hfdz1119.top",
+    hostname: "image.hfdz1119.top",
+    icon: Image,
+    emphasis: "standard",
+    access: "public",
+  },
+  {
+    id: "status",
+    name: "服务状态",
+    description: "查看网站与服务当前是否正常运行。",
+    url: "https://status.hfdz1119.top",
+    hostname: "status.hfdz1119.top",
+    icon: Activity,
+    emphasis: "standard",
+    access: "public",
+  },
+];

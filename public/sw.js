@@ -1,4 +1,4 @@
-const CACHE = "hfdz-curates-v2";
+const CACHE = "hfdz-home-v1";
 const APP_SHELL = ["/favicon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())));

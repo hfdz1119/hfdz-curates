@@ -1,7 +1,7 @@
 {
-  "name": "HFDZ Curates | 会飞的猪精选",
-  "short_name": "HFDZ Curates",
-  "description": "会飞的猪持续整理的个人数字收藏。",
+  "name": "HFDZ Home | 会飞的猪的数字空间",
+  "short_name": "HFDZ Home",
+  "description": "我的网页，都从这里进入。",
   "theme_color": "#0F1117",
   "background_color": "#0F1117",
   "display": "standalone",
