@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 export function Header({ dark, onTheme }: { dark: boolean; onTheme: () => void }) {
   const { pathname } = useLocation();
 
+  if (pathname === "/") return null;
+
   return <header className="site-header">
     <Link className="wordmark" to="/" aria-label="HFDZ Home 首页">
       <img className="brand-seal" src="/favicon.svg" alt="" />

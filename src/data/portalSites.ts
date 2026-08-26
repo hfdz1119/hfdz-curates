@@ -25,11 +25,21 @@ export type ManagedPortalSite = {
   hostname: string;
   iconUrl?: string;
   category: string;
+  categoryId: string;
+  folderId?: string;
   emphasis: "primary" | "standard";
   access: "public" | "authenticated";
   pinned: boolean;
   order: number;
 };
+
+export type PortalCategory = { id: string; name: string; order: number; hidden: boolean; palette: "aurora" | "sakura" | "lavender" | "sunset" };
+export type PortalFolder = { id: string; name: string; categoryId: string; order: number };
+export type PortalSettings = { clockEnabled: boolean; weatherEnabled: boolean; defaultCity: string; latitude: number; longitude: number; density: "compact" | "comfortable" };
+export type PortalConfig = { version: 2; sites: ManagedPortalSite[]; categories: PortalCategory[]; folders: PortalFolder[]; settings: PortalSettings };
+
+export const defaultPortalCategory: PortalCategory = { id: "category-default", name: "我的网页", order: 0, hidden: false, palette: "aurora" };
+export const defaultPortalSettings: PortalSettings = { clockEnabled: true, weatherEnabled: true, defaultCity: "香港", latitude: 22.3193, longitude: 114.1694, density: "compact" };
 
 export const portalSites: PortalSite[] = [
   {
@@ -92,8 +102,11 @@ export const initialManagedPortalSites: ManagedPortalSite[] = portalSites.map((s
   hostname: site.hostname,
   iconUrl: site.icon.mode === "custom" ? site.icon.src : undefined,
   category: "我的网页",
+  categoryId: defaultPortalCategory.id,
   emphasis: site.emphasis,
   access: site.access,
   pinned: site.emphasis === "primary",
   order: index,
 }));
+
+export const initialPortalConfig: PortalConfig = { version: 2, sites: initialManagedPortalSites, categories: [defaultPortalCategory], folders: [], settings: defaultPortalSettings };

@@ -17,8 +17,9 @@
 
 ## Portal component layer
 
-- `--portal-panel-surface` is the single blurred glass plane。
-- `--portal-card-surface` and hover tokens are translucent fills without nested blur。
+- `--portal-panel-surface` remains available for management and dialog surfaces; the public start page outer layout is transparent。
+- Public start-page toolbar, widgets, category strip and cards each use a translucent unit surface with local blur, a fine highlight border and restrained layered shadow。
+- Glass blur is role-specific: the toolbar/category strip use strong background blur, widgets use medium blur, and site cards use roughly 6px blur so wallpaper texture stays visible。
 - `--portal-overlay` keeps uploaded backgrounds subordinate to navigation content。
 - `--portal-panel-radius` is larger than card radius to preserve hierarchy。
 - `--portal-dialog-surface` and `--portal-input-surface` keep the URL setting readable over any background image。
