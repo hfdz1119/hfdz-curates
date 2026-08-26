@@ -1,5 +1,6 @@
-import { ArrowDown, ArrowUp, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, LogOut, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { PortalBackground } from "../components/PortalBackground";
 import { portalAppearance } from "../data/portalAppearance";
 import { initialManagedPortalSites, type ManagedPortalSite } from "../data/portalSites";
@@ -96,7 +97,7 @@ export function ManagePage() {
         {message && <p className="manage-message" role="alert">{message}</p>}
         <button className="manage-primary" disabled={busy}>{busy ? "正在登录…" : "进入管理"}</button>
       </form> : <>
-        <header className="manage-header"><div><p className="portal-kicker">Private management</p><h1 id="manage-title">管理入口</h1><p>在线维护你的公开站点入口。</p></div><button className="manage-quiet" onClick={() => void logout()}><LogOut size={16} />退出</button></header>
+        <header className="manage-header"><div><p className="portal-kicker">Private management</p><h1 id="manage-title">管理入口</h1><p>在线维护你的公开站点入口。</p></div><div className="manage-header-actions"><Link className="manage-quiet" to="/"><ArrowLeft size={16} aria-hidden="true" />返回首页</Link><button className="manage-quiet" onClick={() => void logout()}><LogOut size={16} aria-hidden="true" />退出</button></div></header>
         <div className="manage-layout">
           <form className="manage-editor" onSubmit={save}>
             <div className="manage-editor-heading"><div><h2>{editing ? "编辑网站" : "添加网站"}</h2><p>保存后首页会读取新列表。</p></div>{editing && <button type="button" className="manage-icon-button" aria-label="取消编辑" onClick={() => { setEditing(null); setDraft(blankDraft()); }}><X size={17} /></button>}</div>
