@@ -1,9 +1,13 @@
 import type { ManagedPortalSite, PortalConfig } from "../data/portalSites";
+import type { BookmarkCandidate } from "./bookmarkImport";
 
 export type MetadataResponse = { title: string; description: string; iconUrl: string };
 export type BackupSummary = { sites: number; categories: number; folders: number; configVersion: 2 };
 export type PortalBackup = { backupVersion: 1; exportedAt: string; portalConfig: PortalConfig };
 export type ImportResult = { success: true; summary: BackupSummary; config: PortalConfig; rollbackAvailable: boolean };
+export type BookmarkImportSummary = { source: number; addable: number; skipped: number; duplicates: number; invalid: number; newCategories: number; newFolders: number; finalSites: number; blocked: boolean };
+export type BookmarkImportPreview = { summary: BookmarkImportSummary; skipped: Array<{ index: number; name: string; url: string; reason: string }>; destinations: Array<{ categoryName: string; folderName: string | null; count: number }>; errors: string[] };
+export type BookmarkImportResult = { success: true; summary: BookmarkImportSummary; config: PortalConfig; rollbackAvailable: boolean };
 
 type ApiError = Error & { status?: number };
 
@@ -43,6 +47,8 @@ export const portalApi = {
   applyImport: (backup: unknown) => request<ImportResult>("/api/admin/import/apply", { method: "POST", body: JSON.stringify(backup) }),
   rollbackStatus: () => request<{ available: boolean; createdAt: string | null }>("/api/admin/import/rollback"),
   rollbackImport: () => request<ImportResult>("/api/admin/import/rollback", { method: "POST", body: "{}" }),
+  previewBookmarks: (bookmarks: BookmarkCandidate[]) => request<BookmarkImportPreview>("/api/admin/bookmarks/preview", { method: "POST", body: JSON.stringify({ bookmarks }) }),
+  applyBookmarks: (bookmarks: BookmarkCandidate[]) => request<BookmarkImportResult>("/api/admin/bookmarks/apply", { method: "POST", body: JSON.stringify({ bookmarks }) }),
   weather: (latitude: number, longitude: number, city: string) => request<WeatherResponse>(`/api/weather?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&city=${encodeURIComponent(city)}`).then((value) => {
     if (!isWeatherResponse(value)) throw new Error("天气响应格式不正确。");
     return value;

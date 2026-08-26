@@ -1,15 +1,18 @@
-import { ArrowDown, ArrowLeft, ArrowUp, Download, GripVertical, LogOut, Pencil, Plus, RotateCcw, Save, ScanSearch, Trash2, Upload, X } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowUp, Download, GripVertical, LibraryBig, LogOut, Pencil, Plus, RotateCcw, Save, ScanSearch, Trash2, Upload, X } from "lucide-react";
 import { DragEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { PortalBackground } from "../components/PortalBackground";
+import { PortalBackgroundSettings } from "../components/PortalBackgroundSettings";
 import { portalAppearance } from "../data/portalAppearance";
 import { defaultPortalCategory, defaultPortalSettings, type ManagedPortalSite, type PortalCategory, type PortalConfig, type PortalFolder, type PortalSettings } from "../data/portalSites";
-import { portalApi, type BackupSummary, type PortalBackup } from "../lib/portalApi";
+import { parseBookmarkFile, type BookmarkCandidate } from "../lib/bookmarkImport";
+import { portalApi, type BackupSummary, type BookmarkImportPreview, type PortalBackup } from "../lib/portalApi";
 import { portalBackgroundStore } from "../stores/portalBackground";
 import { portalPaletteStore } from "../stores/portalPalette";
 
 type Draft = Omit<ManagedPortalSite, "id" | "hostname" | "order">;
 type PendingImport = { backup: PortalBackup; summary: BackupSummary };
+type PendingBookmarks = { bookmarks: BookmarkCandidate[]; preview: BookmarkImportPreview; fileName: string };
 const blankDraft = (category = defaultPortalCategory): Draft => ({ name: "", description: "", url: "", iconUrl: "", category: category.name, categoryId: category.id, folderId: undefined, emphasis: "standard", access: "public", pinned: false });
 
 function toDraft(site: ManagedPortalSite): Draft { const { id: _id, hostname: _hostname, order: _order, ...draft } = site; return draft; }
@@ -17,7 +20,7 @@ function sortSites(sites: ManagedPortalSite[], pinned: boolean) { return sites.f
 function withOrders(sites: ManagedPortalSite[], pinnedIds: string[], regularIds: string[]) { const orderById = new Map([...pinnedIds.map((id, order) => [id, order] as const), ...regularIds.map((id, order) => [id, order] as const)]); return sites.map((site) => ({ ...site, order: orderById.get(site.id) ?? site.order })); }
 
 export function ManagePage() {
-  const [background] = useState(() => portalBackgroundStore.get());
+  const [background, setBackground] = useState(() => portalBackgroundStore.get());
   const [palette] = useState(() => portalPaletteStore.get());
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
@@ -35,8 +38,10 @@ export function ManagePage() {
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
+  const [pendingBookmarks, setPendingBookmarks] = useState<PendingBookmarks | null>(null);
   const [rollbackAvailable, setRollbackAvailable] = useState(false);
   const importInput = useRef<HTMLInputElement>(null);
+  const bookmarkInput = useRef<HTMLInputElement>(null);
   const pinnedSites = useMemo(() => sortSites(sites, true), [sites]);
   const regularSites = useMemo(() => sortSites(sites, false), [sites]);
 
@@ -159,6 +164,29 @@ export function ManagePage() {
     finally { setBusy(false); }
   }
 
+  async function selectBookmarks(file?: File) {
+    if (!file) return;
+    setBusy(true); setMessage(""); setPendingBookmarks(null);
+    try {
+      const bookmarks = await parseBookmarkFile(file);
+      const preview = await portalApi.previewBookmarks(bookmarks);
+      setPendingBookmarks({ bookmarks, preview, fileName: file.name });
+      if (preview.errors.length) setMessage(preview.errors.join(" "));
+    } catch (error) { setMessage(error instanceof Error ? error.message : "书签文件无法读取。"); }
+    finally { setBusy(false); if (bookmarkInput.current) bookmarkInput.current.value = ""; }
+  }
+
+  async function applyBookmarks() {
+    if (!pendingBookmarks || pendingBookmarks.preview.summary.blocked) return;
+    setBusy(true); setMessage("");
+    try {
+      const result = await portalApi.applyBookmarks(pendingBookmarks.bookmarks);
+      applyConfig(result.config); setPendingBookmarks(null); setRollbackAvailable(result.rollbackAvailable);
+      setMessage(`已导入 ${result.summary.addable} 个书签，可在 24 小时内撤销本次导入。`);
+    } catch (error) { setMessage(error instanceof Error ? error.message : "书签导入失败。"); }
+    finally { setBusy(false); }
+  }
+
   async function rollbackImport() {
     if (!window.confirm("确定撤销最近一次配置导入吗？")) return;
     setBusy(true); setMessage("");
@@ -167,7 +195,7 @@ export function ManagePage() {
     finally { setBusy(false); }
   }
 
-  async function logout() { await portalApi.logout(); setAuthenticated(false); setSites([]); setEditing(null); setDraft(blankDraft(categories[0])); setPendingImport(null); setRollbackAvailable(false); }
+  async function logout() { await portalApi.logout(); setAuthenticated(false); setSites([]); setEditing(null); setDraft(blankDraft(categories[0])); setPendingImport(null); setPendingBookmarks(null); setRollbackAvailable(false); }
   const change = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((current) => ({ ...current, [key]: value }));
 
   async function savePortalConfig(nextCategories = categories, nextFolders = folders, nextSettings = settings) {
@@ -189,7 +217,7 @@ export function ManagePage() {
         {message && <p className="manage-message" role="alert">{message}</p>}
         <button className="manage-primary" disabled={busy}>{busy ? "正在登录…" : "进入管理"}</button>
       </form> : <>
-        <header className="manage-header"><div><p className="portal-kicker">Private management</p><h1 id="manage-title">管理入口</h1><p>在线维护你的公开站点入口。</p></div><div className="manage-header-actions"><Link className="manage-quiet" to="/"><ArrowLeft size={16} aria-hidden="true" />返回首页</Link><button className="manage-quiet" onClick={() => void logout()}><LogOut size={16} aria-hidden="true" />退出</button></div></header>
+        <header className="manage-header"><div><p className="portal-kicker">Private management</p><h1 id="manage-title">管理入口</h1><p>在线维护你的公开站点入口。</p></div><div className="manage-header-actions"><PortalBackgroundSettings currentUrl={background} onApply={(url) => setBackground(portalBackgroundStore.set(url))} onReset={() => { portalBackgroundStore.clear(); setBackground(null); }} /><Link className="manage-quiet" to="/"><ArrowLeft size={16} aria-hidden="true" />返回首页</Link><button className="manage-quiet" onClick={() => void logout()}><LogOut size={16} aria-hidden="true" />退出</button></div></header>
         <div className="manage-layout">
           <form className="manage-editor" onSubmit={save}>
             <div className="manage-editor-heading"><div><h2>{editing ? "编辑网站" : "添加网站"}</h2><p>保存后首页会立即读取新列表。</p></div>{editing && <button type="button" className="manage-icon-button" aria-label="取消编辑" onClick={() => { setEditing(null); setDraft(blankDraft(categories[0])); }}><X size={17} /></button>}</div>
@@ -209,7 +237,10 @@ export function ManagePage() {
           <section className="manage-editor manage-config-section"><div className="manage-editor-heading"><div><h2>分类</h2><p>名称、显示状态和顺序</p></div></div><div className="manage-inline-add"><input aria-label="新分类名称" placeholder="新分类名称" value={categoryName} onChange={(event) => setCategoryName(event.target.value)} /><button type="button" onClick={addCategory} disabled={busy}><Plus size={16} />添加</button></div>{categories.slice().sort((a, b) => a.order - b.order).map((category, index, ordered) => <div className="manage-config-row" key={category.id}><input aria-label={`${category.name}分类名称`} value={category.name} onChange={(event) => setCategories((current) => current.map((item) => item.id === category.id ? { ...item, name: event.target.value } : item))} /><select aria-label={`${category.name}配色`} value={category.palette} onChange={(event) => setCategories((current) => current.map((item) => item.id === category.id ? { ...item, palette: event.target.value as PortalCategory["palette"] } : item))}><option value="aurora">Aurora</option><option value="sakura">Sakura</option><option value="lavender">Lavender</option><option value="sunset">Sunset</option></select><label className="manage-mini-check"><input type="checkbox" checked={!category.hidden} onChange={(event) => setCategories((current) => current.map((item) => item.id === category.id ? { ...item, hidden: !event.target.checked } : item))} />显示</label><button type="button" aria-label={`上移 ${category.name}`} disabled={index === 0} onClick={() => { const next = [...ordered]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; setCategories(next.map((item, order) => ({ ...item, order }))); }}><ArrowUp size={15} /></button><button type="button" aria-label={`下移 ${category.name}`} disabled={index === ordered.length - 1} onClick={() => { const next = [...ordered]; [next[index], next[index + 1]] = [next[index + 1], next[index]]; setCategories(next.map((item, order) => ({ ...item, order }))); }}><ArrowDown size={15} /></button></div>)}<button className="manage-primary" type="button" disabled={busy} onClick={() => void savePortalConfig()}><Save size={16} />保存分类</button></section>
           <section className="manage-editor manage-config-section"><div className="manage-editor-heading"><div><h2>文件夹</h2><p>仅支持单层文件夹</p></div></div><div className="manage-inline-add"><input aria-label="新文件夹名称" placeholder="新文件夹名称" value={folderName} onChange={(event) => setFolderName(event.target.value)} /><button type="button" onClick={addFolder} disabled={busy}><Plus size={16} />添加</button></div>{folders.slice().sort((a, b) => a.order - b.order).map((folder, index, ordered) => <div className="manage-config-row manage-folder-row" key={folder.id}><input aria-label={`${folder.name}文件夹名称`} value={folder.name} onChange={(event) => setFolders((current) => current.map((item) => item.id === folder.id ? { ...item, name: event.target.value } : item))} /><select aria-label={`${folder.name}所属分类`} value={folder.categoryId} onChange={(event) => setFolders((current) => current.map((item) => item.id === folder.id ? { ...item, categoryId: event.target.value } : item))}>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select><button type="button" aria-label={`上移 ${folder.name}`} disabled={index === 0} onClick={() => { const next = [...ordered]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; setFolders(next.map((item, order) => ({ ...item, order }))); }}><ArrowUp size={15} /></button><button type="button" aria-label={`下移 ${folder.name}`} disabled={index === ordered.length - 1} onClick={() => { const next = [...ordered]; [next[index], next[index + 1]] = [next[index + 1], next[index]]; setFolders(next.map((item, order) => ({ ...item, order }))); }}><ArrowDown size={15} /></button></div>)}<button className="manage-primary" type="button" disabled={busy} onClick={() => void savePortalConfig()}><Save size={16} />保存文件夹</button></section>
           <section className="manage-editor manage-config-section"><div className="manage-editor-heading"><div><h2>首页组件</h2><p>默认天气城市与布局</p></div></div><div className="manage-field-row"><label>默认城市<input value={settings.defaultCity} onChange={(event) => setSettings((current) => ({ ...current, defaultCity: event.target.value }))} /></label><label>布局密度<select value={settings.density} onChange={(event) => setSettings((current) => ({ ...current, density: event.target.value as PortalSettings["density"] }))}><option value="compact">紧凑</option><option value="comfortable">舒适</option></select></label></div><div className="manage-field-row"><label>纬度<input type="number" min="-90" max="90" step="any" value={settings.latitude} onChange={(event) => setSettings((current) => ({ ...current, latitude: Number(event.target.value) }))} /></label><label>经度<input type="number" min="-180" max="180" step="any" value={settings.longitude} onChange={(event) => setSettings((current) => ({ ...current, longitude: Number(event.target.value) }))} /></label></div><div className="manage-toggle-row"><label className="manage-check"><input type="checkbox" checked={settings.clockEnabled} onChange={(event) => setSettings((current) => ({ ...current, clockEnabled: event.target.checked }))} />显示时间</label><label className="manage-check"><input type="checkbox" checked={settings.weatherEnabled} onChange={(event) => setSettings((current) => ({ ...current, weatherEnabled: event.target.checked }))} />显示天气</label></div><button className="manage-primary" type="button" disabled={busy} onClick={() => void savePortalConfig()}><Save size={16} />保存首页设置</button></section>
-          <section className="manage-editor manage-config-section manage-backup-section"><div className="manage-editor-heading"><div><h2>数据备份</h2><p>导出或恢复网站、分类、文件夹和首页设置</p></div></div><div className="manage-backup-actions"><button type="button" onClick={() => void exportConfig()} disabled={busy}><Download size={17} />导出配置</button><button type="button" onClick={() => importInput.current?.click()} disabled={busy}><Upload size={17} />导入配置</button>{rollbackAvailable && <button type="button" onClick={() => void rollbackImport()} disabled={busy}><RotateCcw size={17} />撤销最近导入</button>}<input ref={importInput} type="file" accept="application/json,.json" onChange={(event) => void selectImport(event.target.files?.[0])} /></div>{pendingImport && <div className="manage-import-preview" role="status"><div><strong>备份校验通过</strong><span>{pendingImport.summary.sites} 个网站 · {pendingImport.summary.categories} 个分类 · {pendingImport.summary.folders} 个文件夹 · 配置 v{pendingImport.summary.configVersion}</span></div><div><button type="button" onClick={() => setPendingImport(null)} disabled={busy}>取消</button><button className="is-danger" type="button" onClick={() => void applyImport()} disabled={busy}>确认覆盖当前配置</button></div></div>}</section>
+          <section className="manage-editor manage-config-section manage-backup-section"><div className="manage-editor-heading"><div><h2>导入与备份</h2><p>合并浏览器书签，或备份整套首页配置</p></div></div><div className="manage-backup-actions"><button type="button" onClick={() => bookmarkInput.current?.click()} disabled={busy}><LibraryBig size={17} />导入书签</button><button type="button" onClick={() => void exportConfig()} disabled={busy}><Download size={17} />导出配置</button><button type="button" onClick={() => importInput.current?.click()} disabled={busy}><Upload size={17} />恢复配置</button>{rollbackAvailable && <button type="button" onClick={() => void rollbackImport()} disabled={busy}><RotateCcw size={17} />撤销最近导入</button>}<input ref={bookmarkInput} type="file" accept=".html,.htm,.xlsx,.xls,.csv,text/html,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onChange={(event) => void selectBookmarks(event.target.files?.[0])} /><input ref={importInput} type="file" accept="application/json,.json" onChange={(event) => void selectImport(event.target.files?.[0])} /></div>
+            {pendingBookmarks && <div className={`manage-import-preview manage-bookmark-preview${pendingBookmarks.preview.summary.blocked ? " is-blocked" : ""}`} role="status"><div><strong>{pendingBookmarks.preview.summary.blocked ? "书签暂时不能导入" : "书签预览完成"}</strong><span>{pendingBookmarks.fileName} · 可新增 {pendingBookmarks.preview.summary.addable} · 重复 {pendingBookmarks.preview.summary.duplicates} · 无效 {pendingBookmarks.preview.summary.invalid}</span><span>新增分类 {pendingBookmarks.preview.summary.newCategories} · 新增文件夹 {pendingBookmarks.preview.summary.newFolders} · 导入后共 {pendingBookmarks.preview.summary.finalSites} 个网站</span>{pendingBookmarks.preview.destinations.length > 0 && <small>{pendingBookmarks.preview.destinations.slice(0, 5).map((item) => `${item.categoryName}${item.folderName ? ` / ${item.folderName}` : ""}（${item.count}）`).join(" · ")}</small>}{pendingBookmarks.preview.errors.map((error) => <small className="manage-import-error" key={error}>{error}</small>)}</div><div><button type="button" onClick={() => setPendingBookmarks(null)} disabled={busy}>取消</button>{!pendingBookmarks.preview.summary.blocked && <button type="button" onClick={() => void applyBookmarks()} disabled={busy}>确认导入书签</button>}</div></div>}
+            {pendingImport && <div className="manage-import-preview" role="status"><div><strong>备份校验通过</strong><span>{pendingImport.summary.sites} 个网站 · {pendingImport.summary.categories} 个分类 · {pendingImport.summary.folders} 个文件夹 · 配置 v{pendingImport.summary.configVersion}</span></div><div><button type="button" onClick={() => setPendingImport(null)} disabled={busy}>取消</button><button className="is-danger" type="button" onClick={() => void applyImport()} disabled={busy}>确认覆盖当前配置</button></div></div>}
+          </section>
         </div>
       </>}
     </section>
