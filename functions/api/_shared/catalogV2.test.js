@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createBackup, migrateCatalog, reorderSites, validateBackup } from "./catalogV2.js";
+import { createBackup, migrateCatalog, reorderSites, validateBackup, validatePublicConfig } from "./catalogV2.js";
 
 describe("portal catalog v2 migration", () => {
   it("keeps every legacy site and its stable fields", () => {
@@ -27,6 +27,11 @@ describe("portal backup", () => {
     expect(restored.sites.map(({ hostname: _hostname, ...site }) => site)).toEqual(config.sites);
   });
 
+  it("round-trips an optional global brand icon", () => {
+    const branded = { ...config, settings: { ...config.settings, brandIconUrl: "https://image.example/hfdz.png" } };
+    expect(validateBackup(createBackup(branded)).settings.brandIconUrl).toBe("https://image.example/hfdz.png");
+  });
+
   it("rejects duplicate URLs without changing their stable ids", () => {
     const backup = createBackup(config);
     backup.portalConfig.sites[1].url = "https://a.example";
@@ -37,6 +42,20 @@ describe("portal backup", () => {
     const backup = createBackup(config);
     backup.portalConfig.folders = [{ id: "folder-a", name: "A", categoryId: "missing", order: 0 }];
     expect(() => validateBackup(backup)).toThrow("有效分类");
+  });
+});
+
+describe("portal public settings", () => {
+  const current = migrateCatalog(null);
+
+  it("accepts a secure brand icon and keeps v2 settings backwards compatible", () => {
+    expect(validatePublicConfig({ settings: { ...current.settings, brandIconUrl: "https://image.example/icon.png" } }, current).settings.brandIconUrl).toBe("https://image.example/icon.png");
+    expect(validatePublicConfig({ settings: current.settings }, current).settings.brandIconUrl).toBeUndefined();
+  });
+
+  it("rejects insecure and credential-bearing brand icons", () => {
+    expect(() => validatePublicConfig({ settings: { ...current.settings, brandIconUrl: "http://image.example/icon.png" } }, current)).toThrow("HTTPS");
+    expect(() => validatePublicConfig({ settings: { ...current.settings, brandIconUrl: "https://user:secret@image.example/icon.png" } }, current)).toThrow("HTTPS");
   });
 });
 

@@ -35,7 +35,7 @@ export type ManagedPortalSite = {
 
 export type PortalCategory = { id: string; name: string; order: number; hidden: boolean; palette: "aurora" | "sakura" | "lavender" | "sunset" };
 export type PortalFolder = { id: string; name: string; categoryId: string; order: number };
-export type PortalSettings = { clockEnabled: boolean; weatherEnabled: boolean; defaultCity: string; latitude: number; longitude: number; density: "compact" | "comfortable" };
+export type PortalSettings = { clockEnabled: boolean; weatherEnabled: boolean; defaultCity: string; latitude: number; longitude: number; density: "compact" | "comfortable"; brandIconUrl?: string };
 export type PortalConfig = { version: 2; sites: ManagedPortalSite[]; categories: PortalCategory[]; folders: PortalFolder[]; settings: PortalSettings };
 
 export const defaultPortalCategory: PortalCategory = { id: "category-default", name: "我的网页", order: 0, hidden: false, palette: "aurora" };

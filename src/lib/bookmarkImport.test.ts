@@ -1,7 +1,7 @@
 import { utils, write } from "@e965/xlsx";
 import { parseHTML } from "linkedom";
 import { describe, expect, it } from "vitest";
-import { parseChromeBookmarksHtml, parseSpreadsheetBuffer } from "./bookmarkImport";
+import { filterBookmarksByDestinations, groupBookmarkCandidates, parseChromeBookmarksHtml, parseSpreadsheetBuffer } from "./bookmarkImport";
 
 const parseDocument = (html: string) => parseHTML(html).document as unknown as Document;
 
@@ -47,5 +47,26 @@ describe("spreadsheet bookmark parsing", () => {
     utils.book_append_sheet(workbook, utils.json_to_sheet([{ 名称: "Missing URL" }]), "错误表");
     const output = write(workbook, { type: "array", bookType: "xlsx" }) as ArrayBuffer;
     await expect(parseSpreadsheetBuffer(output)).rejects.toThrow("缺少网址/URL 列");
+  });
+});
+
+describe("bookmark destination selection", () => {
+  const bookmarks = [
+    { name: "Root", url: "https://root.example/", categoryName: "工作" },
+    { name: "Dev", url: "https://dev.example/", categoryName: "工作", folderName: "开发" },
+    { name: "Case", url: "https://case.example/", categoryName: "工作", folderName: "开发" },
+    { name: "Read", url: "https://read.example/", categoryName: "阅读", folderName: "稍后" },
+  ];
+
+  it("groups bookmarks by category and folder without splitting case variants", () => {
+    expect(groupBookmarkCandidates(bookmarks)).toMatchObject([
+      { name: "工作", count: 3, destinations: [{ name: "未分文件夹", count: 1 }, { name: "开发", count: 2 }] },
+      { name: "阅读", count: 1, destinations: [{ name: "稍后", count: 1 }] },
+    ]);
+  });
+
+  it("filters the payload to selected destination groups", () => {
+    const groups = groupBookmarkCandidates(bookmarks);
+    expect(filterBookmarksByDestinations(bookmarks, [groups[0].destinations[1].key]).map((item) => item.name)).toEqual(["Dev", "Case"]);
   });
 });

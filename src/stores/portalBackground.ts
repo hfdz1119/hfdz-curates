@@ -1,6 +1,7 @@
 export const PORTAL_BACKGROUND_STORAGE_KEY = "hfdz-navigation:background-url";
+export const PORTAL_MANAGE_BACKGROUND_STORAGE_KEY = "hfdz-navigation:manage-background-url";
 
-export function normalizePortalBackgroundUrl(value: string) {
+export function normalizePortalImageUrl(value: string, subject = "背景图片") {
   const trimmedValue = value.trim();
   if (!trimmedValue) throw new Error("请粘贴图片的 HTTPS 链接。");
 
@@ -11,11 +12,13 @@ export function normalizePortalBackgroundUrl(value: string) {
     throw new Error("链接格式不正确，请粘贴完整的图片地址。");
   }
 
-  if (url.protocol !== "https:") throw new Error("为了安全，背景图片必须使用 HTTPS 链接。");
-  if (url.username || url.password) throw new Error("背景链接不能包含账号或密码。");
+  if (url.protocol !== "https:") throw new Error(`为了安全，${subject}必须使用 HTTPS 链接。`);
+  if (url.username || url.password) throw new Error(`${subject}链接不能包含账号或密码。`);
 
   return url.href;
 }
+
+export const normalizePortalBackgroundUrl = (value: string) => normalizePortalImageUrl(value, "背景图片");
 
 function getStorage() {
   try {
@@ -25,13 +28,14 @@ function getStorage() {
   }
 }
 
-export const portalBackgroundStore = {
+function createPortalBackgroundStore(storageKey: string) {
+  return {
   get() {
     const storage = getStorage();
     if (!storage) return null;
 
     try {
-      const value = storage.getItem(PORTAL_BACKGROUND_STORAGE_KEY);
+      const value = storage.getItem(storageKey);
       return value ? normalizePortalBackgroundUrl(value) : null;
     } catch {
       return null;
@@ -41,10 +45,14 @@ export const portalBackgroundStore = {
     const normalizedUrl = normalizePortalBackgroundUrl(value);
     const storage = getStorage();
     if (!storage) throw new Error("当前浏览器无法保存背景设置。");
-    storage.setItem(PORTAL_BACKGROUND_STORAGE_KEY, normalizedUrl);
+    storage.setItem(storageKey, normalizedUrl);
     return normalizedUrl;
   },
   clear() {
-    getStorage()?.removeItem(PORTAL_BACKGROUND_STORAGE_KEY);
+    getStorage()?.removeItem(storageKey);
   },
-};
+  };
+}
+
+export const portalBackgroundStore = createPortalBackgroundStore(PORTAL_BACKGROUND_STORAGE_KEY);
+export const portalManageBackgroundStore = createPortalBackgroundStore(PORTAL_MANAGE_BACKGROUND_STORAGE_KEY);

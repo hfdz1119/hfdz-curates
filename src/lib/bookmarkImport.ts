@@ -7,6 +7,9 @@ export type BookmarkCandidate = {
   iconUrl?: string;
 };
 
+export type BookmarkDestinationGroup = { key: string; name: string; count: number };
+export type BookmarkCategoryGroup = { key: string; name: string; count: number; destinations: BookmarkDestinationGroup[] };
+
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const URL_HEADERS = ["网址", "url", "链接", "link"];
 const NAME_HEADERS = ["名称", "标题", "name", "title"];
@@ -17,6 +20,37 @@ const ICON_HEADERS = ["图标", "图标地址", "icon", "iconurl"];
 
 const cleanText = (value: unknown) => typeof value === "string" || typeof value === "number" ? String(value).trim() : "";
 const normalizeHeader = (value: string) => value.trim().toLocaleLowerCase().replace(/[\s_-]+/g, "");
+const destinationName = (value?: string) => value?.trim() || "未分文件夹";
+const categoryName = (value?: string) => value?.trim() || "导入书签";
+export const bookmarkDestinationKey = (bookmark: BookmarkCandidate) => JSON.stringify([categoryName(bookmark.categoryName).toLocaleLowerCase(), destinationName(bookmark.folderName).toLocaleLowerCase()]);
+
+export function groupBookmarkCandidates(bookmarks: BookmarkCandidate[]) {
+  const categories = new Map<string, BookmarkCategoryGroup>();
+  for (const bookmark of bookmarks) {
+    const category = categoryName(bookmark.categoryName);
+    const categoryKey = category.toLocaleLowerCase();
+    const destination = destinationName(bookmark.folderName);
+    const key = bookmarkDestinationKey(bookmark);
+    let group = categories.get(categoryKey);
+    if (!group) {
+      group = { key: categoryKey, name: category, count: 0, destinations: [] };
+      categories.set(categoryKey, group);
+    }
+    let destinationGroup = group.destinations.find((item) => item.key === key);
+    if (!destinationGroup) {
+      destinationGroup = { key, name: destination, count: 0 };
+      group.destinations.push(destinationGroup);
+    }
+    group.count += 1;
+    destinationGroup.count += 1;
+  }
+  return [...categories.values()];
+}
+
+export function filterBookmarksByDestinations(bookmarks: BookmarkCandidate[], selectedKeys: Iterable<string>) {
+  const selected = new Set(selectedKeys);
+  return bookmarks.filter((bookmark) => selected.has(bookmarkDestinationKey(bookmark)));
+}
 const directChild = (element: Element, tagName: string) => Array.from(element.children).find((child) => child.tagName.toLowerCase() === tagName);
 
 function childrenWithoutParagraphWrapper(element: Element) {

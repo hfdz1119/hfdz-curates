@@ -1,13 +1,13 @@
 import { Moon, Plus, Sun } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-export function Header({ dark, onTheme }: { dark: boolean; onTheme: () => void }) {
+export function Header({ dark, onTheme, brandIconUrl }: { dark: boolean; onTheme: () => void; brandIconUrl: string }) {
   const { pathname } = useLocation();
 
   if (pathname === "/") return null;
 
   return <header className="site-header">
     <Link className="wordmark" to="/" aria-label="HFDZ Home 首页">
-      <img className="brand-seal" src="/favicon.svg" alt="" />
+      <img className="brand-seal" src={brandIconUrl} alt="" referrerPolicy="no-referrer" onError={(event) => { if (!event.currentTarget.src.endsWith("/favicon.svg")) event.currentTarget.src = "/favicon.svg"; }} />
       <span>HFDZ Home</span>
     </Link>
     <div className="header-actions">

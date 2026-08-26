@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { normalizePortalBackgroundUrl, PORTAL_BACKGROUND_STORAGE_KEY, portalBackgroundStore } from "./portalBackground";
+import { normalizePortalBackgroundUrl, PORTAL_BACKGROUND_STORAGE_KEY, PORTAL_MANAGE_BACKGROUND_STORAGE_KEY, portalBackgroundStore, portalManageBackgroundStore } from "./portalBackground";
 
 const storage = new Map<string, string>();
 vi.stubGlobal("localStorage", {
@@ -32,5 +32,15 @@ describe("portalBackgroundStore", () => {
   it("ignores an invalid value already present in storage", () => {
     storage.set(PORTAL_BACKGROUND_STORAGE_KEY, "javascript:alert(1)");
     expect(portalBackgroundStore.get()).toBeNull();
+  });
+
+  it("keeps home and management backgrounds independent", () => {
+    portalBackgroundStore.set("https://image.hfdz1119.top/r/home.webp");
+    portalManageBackgroundStore.set("https://image.hfdz1119.top/r/manage.webp");
+    expect(storage.get(PORTAL_BACKGROUND_STORAGE_KEY)).toContain("home.webp");
+    expect(storage.get(PORTAL_MANAGE_BACKGROUND_STORAGE_KEY)).toContain("manage.webp");
+    portalManageBackgroundStore.clear();
+    expect(portalBackgroundStore.get()).toContain("home.webp");
+    expect(portalManageBackgroundStore.get()).toBeNull();
   });
 });
