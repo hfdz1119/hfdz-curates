@@ -41,6 +41,8 @@ export const portalApi = {
   remove: (id: string) => request<{ success: true }>(`/api/admin/sites?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
   metadata: (url: string) => request<MetadataResponse>("/api/admin/metadata", { method: "POST", body: JSON.stringify({ url }) }),
   reorder: (pinnedIds: string[], regularIds: string[]) => request<{ sites: ManagedPortalSite[] }>("/api/admin/sites/order", { method: "PUT", body: JSON.stringify({ pinnedIds, regularIds }) }),
+  reorderCategories: (categoryIds: string[]) => request<{ categories: PortalConfig["categories"] }>("/api/admin/categories/order", { method: "PUT", body: JSON.stringify({ categoryIds }) }),
+  deleteFolder: (id: string) => request<PortalConfig>(`/api/admin/folders?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
   saveConfig: (config: Pick<PortalConfig, "categories" | "folders" | "settings">) => request<PortalConfig>("/api/admin/config", { method: "PUT", body: JSON.stringify(config) }),
   exportConfig: () => request<PortalBackup>("/api/admin/export"),
   previewImport: (backup: unknown) => request<{ valid: true; summary: BackupSummary }>("/api/admin/import/preview", { method: "POST", body: JSON.stringify(backup) }),

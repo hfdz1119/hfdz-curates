@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createBackup, migrateCatalog, reorderSites, validateBackup, validatePublicConfig } from "./catalogV2.js";
+import { createBackup, deleteEmptyFolder, migrateCatalog, reorderCategories, reorderSites, validateBackup, validatePublicConfig } from "./catalogV2.js";
 
 describe("portal catalog v2 migration", () => {
   it("keeps every legacy site and its stable fields", () => {
@@ -73,5 +73,33 @@ describe("portal site ordering", () => {
 
   it("rejects attempts to move a regular site into the pinned group", () => {
     expect(() => reorderSites(config, { pinnedIds: ["p2", "r1"], regularIds: ["p1"] })).toThrow("置顶状态");
+  });
+});
+
+describe("portal category and folder actions", () => {
+  const config = {
+    ...migrateCatalog(null),
+    categories: [
+      { id: "a", name: "A", order: 0, hidden: false, palette: "aurora" },
+      { id: "b", name: "B", order: 1, hidden: true, palette: "sakura" },
+      { id: "c", name: "C", order: 2, hidden: false, palette: "lavender" },
+    ],
+    folders: [
+      { id: "empty", name: "Empty", categoryId: "a", order: 1 },
+      { id: "used", name: "Used", categoryId: "a", order: 4 },
+    ],
+    sites: [{ ...migrateCatalog(null).sites[0], categoryId: "a", category: "A", folderId: "used" }],
+  };
+
+  it("assigns a complete contiguous category order", () => {
+    expect(reorderCategories(config, { categoryIds: ["c", "b", "a"] }).categories.map(({ id, order }) => ({ id, order }))).toEqual([
+      { id: "a", order: 2 }, { id: "b", order: 1 }, { id: "c", order: 0 },
+    ]);
+    expect(() => reorderCategories(config, { categoryIds: ["a", "c"] })).toThrow("当前分类不一致");
+  });
+
+  it("deletes only empty folders and normalizes the remaining order", () => {
+    expect(deleteEmptyFolder(config, "empty").folders).toEqual([{ id: "used", name: "Used", categoryId: "a", order: 0 }]);
+    expect(() => deleteEmptyFolder(config, "used")).toThrow("仍有网站");
   });
 });

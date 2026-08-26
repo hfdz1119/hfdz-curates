@@ -62,6 +62,27 @@ export function reorderSites(config, input) {
   const orderById = new Map([...pinnedIds.map((id, order) => [id, order]), ...regularIds.map((id, order) => [id, order])]);
   return { ...config, sites: config.sites.map((site) => ({ ...site, order: orderById.get(site.id) })) };
 }
+export function reorderCategories(config, input) {
+  const categoryIds = Array.isArray(input?.categoryIds) ? input.categoryIds : [];
+  const currentIds = config.categories.map((category) => category.id);
+  if (categoryIds.length !== currentIds.length || new Set(categoryIds).size !== categoryIds.length) throw new Error("排序列表与当前分类不一致，请刷新后重试。");
+  const knownIds = new Set(currentIds);
+  if (categoryIds.some((id) => typeof id !== "string" || !knownIds.has(id))) throw new Error("排序列表包含未知分类。");
+  const orderById = new Map(categoryIds.map((id, order) => [id, order]));
+  return { ...config, categories: config.categories.map((category) => ({ ...category, order: orderById.get(category.id) })) };
+}
+export function deleteEmptyFolder(config, folderId) {
+  if (typeof folderId !== "string" || !folderId.trim()) throw new Error("请指定要删除的文件夹。");
+  const folder = config.folders.find((item) => item.id === folderId);
+  if (!folder) throw new Error("文件夹不存在，请刷新后重试。");
+  if (config.sites.some((site) => site.folderId === folder.id)) {
+    const error = new Error("文件夹内仍有网站，请先移动或删除其中的网站。");
+    error.status = 409;
+    throw error;
+  }
+  const folders = config.folders.filter((item) => item.id !== folder.id).sort((a, b) => a.order - b.order).map((item, order) => ({ ...item, order }));
+  return { ...config, folders };
+}
 export async function readConfig(env) { if (!env.HFDZ_NAVIGATION_KV) throw new Error("HFDZ_NAVIGATION_KV 尚未绑定。"); return migrateCatalog(await env.HFDZ_NAVIGATION_KV.get(CATALOG_KEY, "json")); }
 export async function writeConfig(env, config) { if (!env.HFDZ_NAVIGATION_KV) throw new Error("HFDZ_NAVIGATION_KV 尚未绑定。"); await env.HFDZ_NAVIGATION_KV.put(CATALOG_KEY, JSON.stringify({ ...config, version: 2 })); }
 export { BACKUP_VERSION, CATALOG_KEY, DEFAULT_CATEGORY, DEFAULT_SETTINGS, MAX_CATEGORIES, MAX_FOLDERS, MAX_SITES, ROLLBACK_KEY };
