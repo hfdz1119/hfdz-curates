@@ -27,6 +27,20 @@ function httpsUrl(value, field, required = true) {
   return url;
 }
 
+export function siteUrlKey(value) {
+  const url = value instanceof URL ? new URL(value.href) : new URL(value);
+  url.hash = "";
+  url.hostname = url.hostname.toLowerCase();
+  if ((url.protocol === "https:" && url.port === "443") || (url.protocol === "http:" && url.port === "80")) url.port = "";
+  url.pathname = url.pathname.replace(/\/+$/, "") || "/";
+  return url.href;
+}
+
+export function hasDuplicateSite(sites, url, excludedId) {
+  const candidate = siteUrlKey(url);
+  return sites.some((site) => site.id !== excludedId && siteUrlKey(site.url) === candidate);
+}
+
 export function validateSite(input, existing = {}) {
   const url = httpsUrl(input.url, "网站地址");
   const iconUrl = httpsUrl(input.iconUrl, "图标地址", false);
