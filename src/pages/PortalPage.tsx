@@ -1,17 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, LockKeyhole } from "lucide-react";
 import { PortalBackground } from "../components/PortalBackground";
 import { PortalBackgroundSettings } from "../components/PortalBackgroundSettings";
-import { PortalIcon } from "../components/PortalIcon";
+import { ManagedPortalIcon, PortalIcon } from "../components/PortalIcon";
 import { PortalPalettePicker } from "../components/PortalPalettePicker";
 import { portalAppearance } from "../data/portalAppearance";
-import { portalSites } from "../data/portalSites";
+import { portalSites, type ManagedPortalSite } from "../data/portalSites";
+import { portalApi } from "../lib/portalApi";
 import { portalBackgroundStore } from "../stores/portalBackground";
 import { portalPaletteStore } from "../stores/portalPalette";
 
 export function PortalPage() {
   const [customBackgroundUrl, setCustomBackgroundUrl] = useState(() => portalBackgroundStore.get());
   const [palette, setPalette] = useState(() => portalPaletteStore.get());
+  const [managedSites, setManagedSites] = useState<ManagedPortalSite[] | null>(null);
+
+  useEffect(() => {
+    void portalApi.publicSites().then(({ sites }) => {
+      if (sites.length > 0) setManagedSites(sites);
+    }).catch(() => {
+      // The static list remains the reliable fallback while Cloudflare KV is unconfigured or unavailable.
+    });
+  }, []);
 
   const applyBackground = (url: string) => {
     const normalizedUrl = portalBackgroundStore.set(url);
@@ -41,9 +51,22 @@ export function PortalPage() {
       </header>
 
       <nav className="portal-grid" aria-label="我的网页">
-        {portalSites.map(({ id, name, description, url, hostname, icon, emphasis, access }) =>
+        {managedSites === null ? portalSites.map(({ id, name, description, url, hostname, icon, emphasis, access }) =>
           <a className={`portal-link portal-link-${id} ${emphasis === "primary" ? "portal-link-primary" : ""}`} href={url} key={id}>
             <span className="portal-icon" aria-hidden="true"><PortalIcon icon={icon} hostname={hostname} /></span>
+            <span className="portal-link-copy">
+              <span className="portal-link-heading">
+                <strong>{name}</strong>
+                {access === "authenticated" && <span className="portal-access"><LockKeyhole size={12} aria-hidden="true" />登录使用</span>}
+              </span>
+              <span className="portal-description">{description}</span>
+              <span className="portal-hostname">{hostname}</span>
+            </span>
+            <span className="portal-link-arrow" aria-hidden="true"><ArrowUpRight size={18} /></span>
+          </a>
+        ) : managedSites.slice().sort((a, b) => Number(b.pinned) - Number(a.pinned) || a.order - b.order).map(({ id, name, description, url, hostname, iconUrl, emphasis, access }) =>
+          <a className={`portal-link portal-link-${id} ${emphasis === "primary" ? "portal-link-primary" : ""}`} href={url} key={id}>
+            <span className="portal-icon" aria-hidden="true"><ManagedPortalIcon iconUrl={iconUrl} hostname={hostname} /></span>
             <span className="portal-link-copy">
               <span className="portal-link-heading">
                 <strong>{name}</strong>

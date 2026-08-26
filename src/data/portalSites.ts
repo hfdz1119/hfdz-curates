@@ -16,6 +16,21 @@ export type PortalSite = {
   access: "public" | "authenticated";
 };
 
+/** The JSON-safe shape persisted by the private Cloudflare management API. */
+export type ManagedPortalSite = {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  hostname: string;
+  iconUrl?: string;
+  category: string;
+  emphasis: "primary" | "standard";
+  access: "public" | "authenticated";
+  pinned: boolean;
+  order: number;
+};
+
 export const portalSites: PortalSite[] = [
   {
     id: "portfolio",
@@ -68,3 +83,17 @@ export const portalSites: PortalSite[] = [
     access: "public",
   },
 ];
+
+export const initialManagedPortalSites: ManagedPortalSite[] = portalSites.map((site, index) => ({
+  id: site.id,
+  name: site.name,
+  description: site.description,
+  url: site.url,
+  hostname: site.hostname,
+  iconUrl: site.icon.mode === "custom" ? site.icon.src : undefined,
+  category: "我的网页",
+  emphasis: site.emphasis,
+  access: site.access,
+  pinned: site.emphasis === "primary",
+  order: index,
+}));

@@ -54,3 +54,12 @@ npm run build
 先使用 Pages 预览地址完成验收，再将 `hfdz1119.top` 从 Portfolio 项目切换到 HFDZ Home。Portfolio 应先在 `me.hfdz1119.top` 验收通过。`public/_redirects` 保留 SPA 深链接回退，并只为已知 Portfolio 路径设置精确 301。
 
 Cloudflare 项目、生产分支、自定义域名及重定向规则必须在仪表盘中单独核验；本仓库配置不能证明线上状态。
+
+### Private online management
+
+`/manage` is a private page for maintaining the Home entries without editing source code. It needs two Cloudflare Pages bindings before it can write data:
+
+- KV namespace binding: `HFDZ_NAVIGATION_KV`
+- encrypted secret: `HFDZ_NAVIGATION_ADMIN_PASSWORD`
+
+The public `/api/sites` endpoint returns only the entry list. The password is exchanged for an HttpOnly, same-site management cookie and is never stored in browser storage. Before the KV namespace contains data, the deployed site continues to use the five source-controlled fallback entries.
