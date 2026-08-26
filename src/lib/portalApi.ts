@@ -49,7 +49,7 @@ export const portalApi = {
   rollbackImport: () => request<ImportResult>("/api/admin/import/rollback", { method: "POST", body: "{}" }),
   previewBookmarks: (bookmarks: BookmarkCandidate[]) => request<BookmarkImportPreview>("/api/admin/bookmarks/preview", { method: "POST", body: JSON.stringify({ bookmarks }) }),
   applyBookmarks: (bookmarks: BookmarkCandidate[]) => request<BookmarkImportResult>("/api/admin/bookmarks/apply", { method: "POST", body: JSON.stringify({ bookmarks }) }),
-  weather: (latitude: number, longitude: number, city: string) => request<WeatherResponse>(`/api/weather?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&city=${encodeURIComponent(city)}`).then((value) => {
+  weather: (latitude?: number, longitude?: number, city?: string) => request<WeatherResponse>(latitude === undefined || longitude === undefined ? "/api/weather" : `/api/weather?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&city=${encodeURIComponent(city ?? "当前位置")}`).then((value) => {
     if (!isWeatherResponse(value)) throw new Error("天气响应格式不正确。");
     return value;
   }),
