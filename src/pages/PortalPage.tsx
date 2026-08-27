@@ -23,9 +23,8 @@ export function PortalPage() {
     });
   }, []);
 
-  const applyBackground = (url: string) => {
-    const normalizedUrl = portalBackgroundStore.set(url);
-    setCustomBackgroundUrl(normalizedUrl);
+  const applyBackground = (config: Parameters<typeof portalBackgroundStore.set>[0]) => {
+    setCustomBackgroundUrl(portalBackgroundStore.set(config));
   };
 
   const resetBackground = () => {

@@ -1,6 +1,6 @@
-import { FormEvent, useId, useRef, useState } from "react";
+import { type CSSProperties, FormEvent, useId, useRef, useState } from "react";
 import { Image as ImageIcon, RotateCcw, X } from "lucide-react";
-import { normalizePortalImageUrl } from "../stores/portalBackground";
+import { defaultPortalBackgroundConfig, normalizePortalBackground, normalizePortalImageUrl, type PortalBackgroundConfig, type PortalGlassStrength } from "../stores/portalBackground";
 
 type PortalImageSettingsProps = {
   currentUrl: string | null;
@@ -194,19 +194,47 @@ export function PortalImageSettings({ currentUrl, onApply, onReset, triggerLabel
   </>;
 }
 
-type PortalBackgroundSettingsProps = Pick<PortalImageSettingsProps, "currentUrl" | "onApply" | "onReset"> & {
+type PortalBackgroundSettingsProps = {
+  currentUrl: PortalBackgroundConfig | null;
+  onApply: (config: PortalBackgroundConfig) => void | Promise<void>;
+  onReset: () => void | Promise<void>;
   target?: "首页" | "管理页";
 };
 
-export function PortalBackgroundSettings({ target = "首页", ...props }: PortalBackgroundSettingsProps) {
-  return <PortalImageSettings
-    {...props}
-    triggerLabel="背景"
-    dialogTitle={`设置${target}背景`}
-    dialogDescription="粘贴你上传到图床后得到的图片链接。"
-    helpText="仅接受 HTTPS；设置保存在当前浏览器，不会同步到其他设备。"
-    emptyPreviewText="粘贴图片直链后可先预览"
-    previewAlt={`${target}背景图片预览`}
-    applyLabel="应用背景"
-  />;
+export function PortalBackgroundSettings({ target = "首页", currentUrl, onApply, onReset }: PortalBackgroundSettingsProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const initialConfig = currentUrl ?? { url: "", ...defaultPortalBackgroundConfig };
+  const [draft, setDraft] = useState<PortalBackgroundConfig>(initialConfig);
+  const [error, setError] = useState("");
+  const [checking, setChecking] = useState(false);
+  const open = () => { setDraft(currentUrl ?? { url: "", ...defaultPortalBackgroundConfig }); setError(""); dialogRef.current?.showModal(); };
+  const close = () => dialogRef.current?.close();
+  const updateNumber = (key: "scale" | "positionX" | "positionY" | "overlay" | "imageBlur", value: number) => setDraft((current) => ({ ...current, [key]: value }));
+  const submit = async (event: FormEvent) => { event.preventDefault(); setChecking(true); try { const normalized = normalizePortalBackground(draft); await loadBackgroundImage(normalized.url); await onApply(normalized); close(); } catch (caught) { setError(caught instanceof Error ? caught.message : "背景设置无效。"); } finally { setChecking(false); } };
+  const reset = async () => { setChecking(true); try { await onReset(); close(); } catch (caught) { setError(caught instanceof Error ? caught.message : "恢复默认失败。"); } finally { setChecking(false); } };
+  return <>
+    <button className="portal-background-trigger" type="button" onClick={open} ref={triggerRef}><ImageIcon size={16} aria-hidden="true" />背景{currentUrl && <span className="portal-background-custom" aria-label={`已使用自定义${target}背景`} />}</button>
+    <dialog className="portal-background-dialog" ref={dialogRef} onClose={() => triggerRef.current?.focus()} onClick={(event) => { if (event.target === event.currentTarget) close(); }}>
+      <form className="portal-background-form" onSubmit={submit}>
+        <header className="portal-dialog-header"><div><h2>设置{target}背景</h2><p>调整只在预览中生效，应用后才更新页面。</p></div><button className="portal-dialog-close" type="button" aria-label="关闭背景设置" onClick={close}><X size={18} /></button></header>
+        <div className="portal-background-preview is-ready" data-glass-strength={draft.glassStrength} style={{ "--preview-scale": `${draft.scale / 100}`, "--preview-x": `${draft.positionX}%`, "--preview-y": `${draft.positionY}%`, "--preview-overlay": `${draft.overlay / 100}`, "--preview-blur": `${draft.imageBlur}px` } as CSSProperties}>{draft.url ? <img src={draft.url} alt={`${target}背景预览`} referrerPolicy="no-referrer" /> : <span>粘贴 HTTPS 图片直链开始预览</span>}<i aria-hidden="true" /></div>
+        <label className="portal-background-field"><span>图片链接</span><input type="url" inputMode="url" value={draft.url} placeholder="https://image.example/background.webp" onChange={(event) => { setDraft((current) => ({ ...current, url: event.target.value })); setError(""); }} /></label>
+        <div className="portal-background-controls">
+          <Range label="缩放" value={draft.scale} min={100} max={140} unit="%" onChange={(value) => updateNumber("scale", value)} />
+          <Range label="水平位置" value={draft.positionX} min={0} max={100} unit="%" onChange={(value) => updateNumber("positionX", value)} />
+          <Range label="垂直位置" value={draft.positionY} min={0} max={100} unit="%" onChange={(value) => updateNumber("positionY", value)} />
+          <Range label="遮罩" value={draft.overlay} min={0} max={80} unit="%" onChange={(value) => updateNumber("overlay", value)} />
+          <Range label="图片模糊" value={draft.imageBlur} min={0} max={16} unit="px" onChange={(value) => updateNumber("imageBlur", value)} />
+          <label className="portal-background-field"><span>玻璃强度</span><select value={draft.glassStrength} onChange={(event) => setDraft((current) => ({ ...current, glassStrength: event.target.value as PortalGlassStrength }))}><option value="light">轻</option><option value="standard">标准</option><option value="strong">强</option></select></label>
+        </div>
+        <p className="portal-background-error" aria-live="polite">{error}</p>
+        <div className="portal-dialog-actions"><button className="portal-reset-button" type="button" onClick={() => void reset()} disabled={checking}><RotateCcw size={15} />恢复默认</button><button className="portal-cancel-button" type="button" onClick={close}>取消</button><button className="portal-apply-button" type="submit" disabled={checking}>{checking ? "正在检查图片…" : "应用背景"}</button></div>
+      </form>
+    </dialog>
+  </>;
+}
+
+function Range({ label, value, min, max, unit, onChange }: { label: string; value: number; min: number; max: number; unit: string; onChange: (value: number) => void }) {
+  return <label className="portal-background-range"><span>{label}<output>{value}{unit}</output></span><input type="range" min={min} max={max} value={value} onChange={(event) => onChange(Number(event.target.value))} /></label>;
 }

@@ -29,16 +29,17 @@ export type ManagedPortalSite = {
   folderId?: string;
   emphasis: "primary" | "standard";
   access: "public" | "authenticated";
+  visibility: "public" | "private";
   pinned: boolean;
   order: number;
 };
 
-export type PortalCategory = { id: string; name: string; order: number; hidden: boolean; palette: "aurora" | "sakura" | "lavender" | "sunset" };
+export type PortalCategory = { id: string; name: string; order: number; hidden: boolean; palette: "aurora" | "sakura" | "lavender" | "sunset"; visibility: "public" | "private" };
 export type PortalFolder = { id: string; name: string; categoryId: string; order: number };
 export type PortalSettings = { clockEnabled: boolean; weatherEnabled: boolean; defaultCity: string; latitude: number; longitude: number; density: "compact" | "comfortable"; brandIconUrl?: string };
-export type PortalConfig = { version: 2; sites: ManagedPortalSite[]; categories: PortalCategory[]; folders: PortalFolder[]; settings: PortalSettings };
+export type PortalConfig = { version: 3; sites: ManagedPortalSite[]; categories: PortalCategory[]; folders: PortalFolder[]; settings: PortalSettings };
 
-export const defaultPortalCategory: PortalCategory = { id: "category-default", name: "我的网页", order: 0, hidden: false, palette: "aurora" };
+export const defaultPortalCategory: PortalCategory = { id: "category-default", name: "我的网页", order: 0, hidden: false, palette: "aurora", visibility: "public" };
 export const defaultPortalSettings: PortalSettings = { clockEnabled: true, weatherEnabled: true, defaultCity: "香港", latitude: 22.3193, longitude: 114.1694, density: "compact" };
 
 export const portalSites: PortalSite[] = [
@@ -105,8 +106,9 @@ export const initialManagedPortalSites: ManagedPortalSite[] = portalSites.map((s
   categoryId: defaultPortalCategory.id,
   emphasis: site.emphasis,
   access: site.access,
+  visibility: "public",
   pinned: site.emphasis === "primary",
   order: index,
 }));
 
-export const initialPortalConfig: PortalConfig = { version: 2, sites: initialManagedPortalSites, categories: [defaultPortalCategory], folders: [], settings: defaultPortalSettings };
+export const initialPortalConfig: PortalConfig = { version: 3, sites: initialManagedPortalSites, categories: [defaultPortalCategory], folders: [], settings: defaultPortalSettings };

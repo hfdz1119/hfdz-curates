@@ -21,7 +21,7 @@ export async function onRequestPost(context) {
   try {
     const rollback = await readRollback(context.env);
     if (!rollback?.config) return json({ error: "没有可恢复的导入记录。" }, 404);
-    const config = validateBackup({ backupVersion: 1, portalConfig: rollback.config });
+    const config = validateBackup({ backupVersion: rollback.config?.version === 3 ? 2 : 1, portalConfig: rollback.config });
     await writeConfig(context.env, config);
     await context.env.HFDZ_NAVIGATION_KV.delete(ROLLBACK_KEY);
     return json({ success: true, summary: backupSummary(config), config, rollbackAvailable: false });

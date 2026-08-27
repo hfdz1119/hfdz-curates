@@ -2,8 +2,8 @@ import type { ManagedPortalSite, PortalConfig } from "../data/portalSites";
 import type { BookmarkCandidate } from "./bookmarkImport";
 
 export type MetadataResponse = { title: string; description: string; iconUrl: string };
-export type BackupSummary = { sites: number; categories: number; folders: number; configVersion: 2 };
-export type PortalBackup = { backupVersion: 1; exportedAt: string; portalConfig: PortalConfig };
+export type BackupSummary = { sites: number; categories: number; folders: number; configVersion: 3 };
+export type PortalBackup = { backupVersion: 2; exportedAt: string; portalConfig: PortalConfig };
 export type ImportResult = { success: true; summary: BackupSummary; config: PortalConfig; rollbackAvailable: boolean };
 export type BookmarkImportSummary = { source: number; addable: number; skipped: number; duplicates: number; invalid: number; newCategories: number; newFolders: number; finalSites: number; blocked: boolean };
 export type BookmarkImportPreview = { summary: BookmarkImportSummary; skipped: Array<{ index: number; name: string; url: string; reason: string }>; destinations: Array<{ categoryName: string; folderName: string | null; count: number }>; errors: string[] };
@@ -39,6 +39,8 @@ export const portalApi = {
   create: (site: Omit<ManagedPortalSite, "id" | "hostname" | "order">) => request<{ site: ManagedPortalSite }>("/api/admin/sites", { method: "POST", body: JSON.stringify(site) }),
   update: (site: ManagedPortalSite) => request<{ site: ManagedPortalSite }>("/api/admin/sites", { method: "PUT", body: JSON.stringify(site) }),
   remove: (id: string) => request<{ success: true }>(`/api/admin/sites?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
+  bulkMove: (siteIds: string[], categoryId: string, folderId?: string | null) => request<{ config: PortalConfig }>("/api/admin/sites/bulk-move", { method: "PUT", body: JSON.stringify({ siteIds, categoryId, folderId }) }),
+  deleteCategory: (id: string) => request<{ config: PortalConfig }>(`/api/admin/categories?id=${encodeURIComponent(id)}`, { method: "DELETE" }),
   metadata: (url: string) => request<MetadataResponse>("/api/admin/metadata", { method: "POST", body: JSON.stringify({ url }) }),
   reorder: (pinnedIds: string[], regularIds: string[]) => request<{ sites: ManagedPortalSite[] }>("/api/admin/sites/order", { method: "PUT", body: JSON.stringify({ pinnedIds, regularIds }) }),
   reorderCategories: (categoryIds: string[]) => request<{ categories: PortalConfig["categories"] }>("/api/admin/categories/order", { method: "PUT", body: JSON.stringify({ categoryIds }) }),
@@ -53,20 +55,21 @@ export const portalApi = {
   applyBookmarks: (bookmarks: BookmarkCandidate[]) => request<BookmarkImportResult>("/api/admin/bookmarks/apply", { method: "POST", body: JSON.stringify({ bookmarks }) }),
   weather: (latitude?: number, longitude?: number, city?: string) => request<WeatherResponse>(latitude === undefined || longitude === undefined ? "/api/weather" : `/api/weather?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&city=${encodeURIComponent(city ?? "当前位置")}`).then((value) => {
     if (!isWeatherResponse(value)) throw new Error("天气响应格式不正确。");
-    return value;
+    return { ...value, current: { ...value.current, aqi: value.current.aqi ?? null, uvIndex: value.current.uvIndex ?? null }, forecast: value.forecast.map((day) => ({ ...day, uvIndex: day.uvIndex ?? null })) };
   }),
 };
 
-export type WeatherResponse = { location: string; current: { temperature: number; apparentTemperature: number; weatherCode: number }; forecast: Array<{ date: string; maximum: number; minimum: number; weatherCode: number }> };
+export type WeatherResponse = { location: string; current: { temperature: number; apparentTemperature: number; humidity: number; windSpeed: number; weatherCode: number; aqi: number | null; uvIndex: number | null }; forecast: Array<{ date: string; maximum: number; minimum: number; weatherCode: number; uvIndex: number | null }> };
 
 export function isWeatherResponse(value: unknown): value is WeatherResponse {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Partial<WeatherResponse>;
-  return typeof candidate.location === "string" && typeof candidate.current?.temperature === "number" && typeof candidate.current.apparentTemperature === "number" && typeof candidate.current.weatherCode === "number" && Array.isArray(candidate.forecast);
+  const current = candidate.current as WeatherResponse["current"] & { aqi?: unknown; uvIndex?: unknown };
+  return typeof candidate.location === "string" && typeof current?.temperature === "number" && typeof current.apparentTemperature === "number" && typeof current.humidity === "number" && typeof current.windSpeed === "number" && typeof current.weatherCode === "number" && (current.aqi == null || typeof current.aqi === "number") && (current.uvIndex == null || typeof current.uvIndex === "number") && Array.isArray(candidate.forecast);
 }
 
 function isPortalConfig(value: unknown): value is PortalConfig {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Partial<PortalConfig>;
-  return candidate.version === 2 && Array.isArray(candidate.sites) && Array.isArray(candidate.categories) && Array.isArray(candidate.folders) && Boolean(candidate.settings);
+  return candidate.version === 3 && Array.isArray(candidate.sites) && Array.isArray(candidate.categories) && Array.isArray(candidate.folders) && Boolean(candidate.settings);
 }

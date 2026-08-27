@@ -27,7 +27,7 @@ describe("portal backup endpoints", () => {
     const { calls, context } = await setup();
     const response = await previewImport(context("https://example.com/api/admin/import/preview", createBackup(replacement)));
     expect(response.status).toBe(200);
-    expect(await response.json()).toMatchObject({ valid: true, summary: { sites: 1, configVersion: 2 } });
+    expect(await response.json()).toMatchObject({ valid: true, summary: { sites: 1, configVersion: 3 } });
     expect(calls.puts).toHaveLength(0);
   });
 

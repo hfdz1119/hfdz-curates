@@ -54,7 +54,7 @@ export function prepareBookmarkImport(current, input) {
       const iconValue = text(item?.iconUrl, 2048);
       let category = categoryByName.get(nameKey(categoryName));
       if (!category) {
-        category = { id: `category-${crypto.randomUUID()}`, name: categoryName, order: nextCategoryOrder++, hidden: false, palette: "aurora" };
+        category = { id: `category-${crypto.randomUUID()}`, name: categoryName, order: nextCategoryOrder++, hidden: false, palette: "aurora", visibility: "public" };
         categories.push(category); categoryByName.set(nameKey(categoryName), category);
       }
 
@@ -97,7 +97,7 @@ export function prepareBookmarkImport(current, input) {
   if (categories.length > MAX_CATEGORIES) errors.push(`导入后将有 ${categories.length} 个分类，最多允许 ${MAX_CATEGORIES} 个。`);
   if (folders.length > MAX_FOLDERS) errors.push(`导入后将有 ${folders.length} 个文件夹，最多允许 ${MAX_FOLDERS} 个。`);
   if (!additions.length) errors.push("没有可新增的 HTTPS 书签。");
-  const config = { ...current, version: 2, categories, folders, sites: [...current.sites, ...additions] };
+  const config = { ...current, version: 3, categories, folders, sites: [...current.sites, ...additions] };
   return {
     config,
     summary: { source: input.length, addable: additions.length, skipped: skipped.length, duplicates: skipped.filter((item) => item.reason === "重复网址").length, invalid: skipped.filter((item) => item.reason !== "重复网址").length, newCategories: categories.length - current.categories.length, newFolders: folders.length - current.folders.length, finalSites: config.sites.length, blocked: errors.length > 0 },

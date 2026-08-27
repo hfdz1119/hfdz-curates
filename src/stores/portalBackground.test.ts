@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { normalizePortalBackgroundUrl, PORTAL_BACKGROUND_STORAGE_KEY, PORTAL_MANAGE_BACKGROUND_STORAGE_KEY, portalBackgroundStore, portalManageBackgroundStore } from "./portalBackground";
+import { normalizePortalBackground, normalizePortalBackgroundUrl, PORTAL_BACKGROUND_STORAGE_KEY, PORTAL_MANAGE_BACKGROUND_STORAGE_KEY, portalBackgroundStore, portalManageBackgroundStore } from "./portalBackground";
 
 const storage = new Map<string, string>();
 vi.stubGlobal("localStorage", {
@@ -22,9 +22,9 @@ describe("portalBackgroundStore", () => {
   });
 
   it("stores one browser-local override and clears it", () => {
-    const url = portalBackgroundStore.set("https://image.hfdz1119.top/r/home.webp");
-    expect(storage.get(PORTAL_BACKGROUND_STORAGE_KEY)).toBe(url);
-    expect(portalBackgroundStore.get()).toBe(url);
+    const config = portalBackgroundStore.set("https://image.hfdz1119.top/r/home.webp");
+    expect(JSON.parse(storage.get(PORTAL_BACKGROUND_STORAGE_KEY)!)).toEqual(config);
+    expect(portalBackgroundStore.get()).toEqual(config);
     portalBackgroundStore.clear();
     expect(portalBackgroundStore.get()).toBeNull();
   });
@@ -40,7 +40,13 @@ describe("portalBackgroundStore", () => {
     expect(storage.get(PORTAL_BACKGROUND_STORAGE_KEY)).toContain("home.webp");
     expect(storage.get(PORTAL_MANAGE_BACKGROUND_STORAGE_KEY)).toContain("manage.webp");
     portalManageBackgroundStore.clear();
-    expect(portalBackgroundStore.get()).toContain("home.webp");
+    expect(portalBackgroundStore.get()?.url).toContain("home.webp");
     expect(portalManageBackgroundStore.get()).toBeNull();
+  });
+
+  it("migrates old URL strings and clamps detailed settings", () => {
+    storage.set(PORTAL_BACKGROUND_STORAGE_KEY, "https://image.hfdz1119.top/old.webp");
+    expect(portalBackgroundStore.get()).toEqual({ url: "https://image.hfdz1119.top/old.webp", scale: 100, positionX: 50, positionY: 50, overlay: 38, imageBlur: 0, glassStrength: "standard" });
+    expect(normalizePortalBackground({ url: "https://image.hfdz1119.top/new.webp", scale: 999, positionX: -20, positionY: 120, overlay: 90, imageBlur: 30, glassStrength: "strong" })).toMatchObject({ scale: 140, positionX: 0, positionY: 100, overlay: 80, imageBlur: 16, glassStrength: "strong" });
   });
 });

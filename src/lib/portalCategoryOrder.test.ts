@@ -3,9 +3,9 @@ import type { PortalCategory } from "../data/portalSites";
 import { mergeVisibleCategoryOrder } from "./portalCategoryOrder";
 
 const categories: PortalCategory[] = [
-  { id: "visible-a", name: "A", order: 0, hidden: false, palette: "aurora" },
-  { id: "hidden", name: "Hidden", order: 1, hidden: true, palette: "sakura" },
-  { id: "visible-b", name: "B", order: 2, hidden: false, palette: "lavender" },
+  { id: "visible-a", name: "A", order: 0, hidden: false, palette: "aurora", visibility: "public" },
+  { id: "hidden", name: "Hidden", order: 1, hidden: true, palette: "sakura", visibility: "public" },
+  { id: "visible-b", name: "B", order: 2, hidden: false, palette: "lavender", visibility: "public" },
 ];
 
 describe("visible portal category ordering", () => {
