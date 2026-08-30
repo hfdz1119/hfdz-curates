@@ -274,6 +274,9 @@ a { color: inherit; }
   --portal-action-rgb: 77 225 193;
   --portal-accent-text: color-mix(in srgb, var(--portal-accent) 64%, #08111f);
   --border-focus: var(--portal-accent);
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
   display: grid;
   align-content: center;
   min-height: calc(100svh - 146px);
@@ -901,8 +904,8 @@ footer { display: flex; justify-content: space-between; gap: 14px; margin-top: 7
 .portal-start-page .portal-widget,
 .portal-start-page .portal-categories,
 .portal-start-page .portal-link {
-  backdrop-filter: blur(20px) saturate(112%);
-  -webkit-backdrop-filter: blur(20px) saturate(112%);
+  backdrop-filter: blur(26px) saturate(118%);
+  -webkit-backdrop-filter: blur(26px) saturate(118%);
 }
 .portal-start-page .portal-toolbar { box-shadow: 0 1px 0 rgb(255 255 255 / 65%) inset, 0 14px 30px rgb(15 23 42 / 14%); }
 .portal-start-page .portal-link { color: var(--text-primary); text-shadow: none; }
@@ -919,6 +922,8 @@ footer { display: flex; justify-content: space-between; gap: 14px; margin-top: 7
   isolation: isolate;
   border-color: rgb(15 23 42 / 18%);
   background: rgb(248 250 252 / 62%);
+  backdrop-filter: blur(28px) saturate(118%);
+  -webkit-backdrop-filter: blur(28px) saturate(118%);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 72%), 0 8px 20px rgb(15 23 42 / 10%);
   transition: transform 160ms ease-out, background-color 140ms ease-out, border-color 140ms ease-out, box-shadow 160ms ease-out;
 }
