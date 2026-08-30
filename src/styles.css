@@ -364,7 +364,7 @@ a { color: inherit; }
 .portal-reset-button:hover, .portal-cancel-button:hover, .portal-background-input-row button:hover { border-color: rgb(var(--portal-accent-rgb) / 34%); background: var(--surface-elevated); color: var(--text-primary); }
 .portal-apply-button:hover:not(:disabled) { background: color-mix(in srgb, var(--portal-accent) 82%, white); }
 .portal-manage-page { padding-top: clamp(var(--space-12), 9vh, 104px); }
-.manage-glass { max-width: 980px; }
+.manage-glass { max-width: 1180px; }
 .manage-header, .manage-header-actions, .manage-editor-heading, .manage-list-heading, .manage-site, .manage-site-actions, .manage-field-row { display: flex; align-items: center; }
 .manage-header, .manage-editor-heading, .manage-list-heading { justify-content: space-between; gap: var(--space-4); }
 .manage-header { margin-bottom: var(--space-8); }
@@ -983,6 +983,15 @@ footer { display: flex; justify-content: space-between; gap: 14px; margin-top: 7
 .manage-sidebar button:hover, .manage-sidebar button.is-active { border-color: color-mix(in srgb, var(--portal-accent) 30%, var(--border-subtle)); background: color-mix(in srgb, var(--portal-accent) 9%, transparent); color: var(--text-primary); }
 .manage-sidebar small { color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .manage-workspace, .manage-category-privacy, .manage-config-grid { margin-left: 216px; }
+.manage-glass { background: color-mix(in srgb, var(--surface-base) 96%, var(--surface-elevated)); }
+.manage-add-site-top { margin: 0 0 10px 216px; }
+.manage-site-editor { position: fixed; inset: 0 0 0 auto; z-index: var(--z-modal); width: min(480px, 100vw); max-height: 100dvh; overflow-y: auto; margin: 0; border-radius: 18px 0 0 18px; background: var(--surface-base); box-shadow: -20px 0 60px rgb(15 23 42 / 18%); transform: translateX(105%); transition: transform 220ms var(--ease-out); }
+.manage-site-editor.is-open { transform: translateX(0); }
+.manage-drawer-backdrop { position: fixed; inset: 0; z-index: calc(var(--z-modal) - 1); border: 0; background: rgb(15 23 42 / 34%); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+.manage-site-editor[aria-hidden="true"] { visibility: hidden; pointer-events: none; }
+.manage-editor-eyebrow { margin: 0 0 4px !important; color: var(--portal-accent-text) !important; font-size: var(--text-xs) !important; font-weight: var(--weight-semibold); }
+.manage-list-heading .manage-primary { flex: 0 0 auto; }
+.manage-layout { grid-template-columns: minmax(0, 1fr); }
 .manage-config-error { clear: both; margin: 10px 0 0 216px; color: var(--state-error); font-size: var(--text-sm); }
 .manage-workspace { min-width: 0; }
 .portal-manage-page[data-manage-section="sites"] .manage-category-privacy,
@@ -1009,13 +1018,20 @@ footer { display: flex; justify-content: space-between; gap: 14px; margin-top: 7
   .manage-sidebar { float: none; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 12px; }
   .manage-sidebar button { grid-template-columns: 20px minmax(0, 1fr); }
   .manage-sidebar small { display: none; }
-  .manage-workspace, .manage-category-privacy, .manage-config-grid, .manage-config-error { margin-left: 0; }
+  .manage-workspace, .manage-category-privacy, .manage-config-grid, .manage-config-error, .manage-add-site-top { margin-left: 0; }
 }
 @media (max-width: 620px) {
-  .manage-sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manage-sidebar { display: flex; width: calc(100% + 4px); overflow-x: auto; gap: 6px; padding: 4px; border-radius: 8px; }
+  .manage-sidebar button { flex: 0 0 auto; grid-template-columns: 18px auto; min-width: max-content; padding: 0 12px; }
+  .manage-site-editor { width: 100vw; height: 100dvh; max-height: none; border-radius: 0; padding: 18px 14px; }
+  .manage-list-heading { align-items: flex-start; }
+  .manage-add-site-top { width: 100%; }
   .manage-sidebar button { min-height: 44px; }
   .manage-inline-add { grid-template-columns: 1fr; }
   .manage-inline-add button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .manage-site-editor { transition: none; }
 }
 .portal-background-preview img { width: 100%; height: 100%; object-fit: cover; object-position: var(--preview-x, 50%) var(--preview-y, 50%); filter: blur(var(--preview-blur, 0)); transform: scale(var(--preview-scale, 1)); }
 .portal-background-preview i { position: absolute; inset: 0; background: #03060c; opacity: var(--preview-overlay, .38); pointer-events: none; }

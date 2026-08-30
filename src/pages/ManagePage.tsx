@@ -43,6 +43,7 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
   const [configError, setConfigError] = useState("");
   const [draft, setDraft] = useState<Draft>(blankDraft);
   const [editing, setEditing] = useState<ManagedPortalSite | null>(null);
+  const [editorOpen, setEditorOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [metadataBusy, setMetadataBusy] = useState(false);
@@ -60,6 +61,7 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
   const [targetFolderId, setTargetFolderId] = useState("");
   const importInput = useRef<HTMLInputElement>(null);
   const bookmarkInput = useRef<HTMLInputElement>(null);
+  const editorPanel = useRef<HTMLFormElement>(null);
   const bookmarkPreviewRequest = useRef(0);
   const pinnedSites = useMemo(() => sortSites(sites, true), [sites]);
   const regularSites = useMemo(() => sortSites(sites, false), [sites]);
@@ -75,7 +77,17 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
     }).catch(() => setAuthenticated(false));
   }, []);
 
-  function applyConfig(config: PortalConfig) { setSites(config.sites); setCategories(config.categories); setFolders(config.folders); setSettings(config.settings); setTargetCategoryId((current) => config.categories.some((category) => category.id === current) ? current : config.categories[0].id); setFolderCategoryId((current) => config.categories.some((category) => category.id === current) ? current : config.categories[0].id); setSelectedIds(new Set()); onBrandIconChange(config.settings.brandIconUrl ?? "/favicon.svg"); setEditing(null); setDraft(blankDraft(config.categories[0])); }
+  useEffect(() => {
+    if (!editorOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape" && !busy) setEditorOpen(false); };
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    const focusFrame = window.requestAnimationFrame(() => editorPanel.current?.querySelector<HTMLInputElement>('input[type="url"]')?.focus());
+    window.addEventListener("keydown", closeOnEscape);
+    return () => { window.cancelAnimationFrame(focusFrame); window.removeEventListener("keydown", closeOnEscape); document.documentElement.style.overflow = previousOverflow; };
+  }, [editorOpen, busy]);
+
+  function applyConfig(config: PortalConfig) { setSites(config.sites); setCategories(config.categories); setFolders(config.folders); setSettings(config.settings); setTargetCategoryId((current) => config.categories.some((category) => category.id === current) ? current : config.categories[0].id); setFolderCategoryId((current) => config.categories.some((category) => category.id === current) ? current : config.categories[0].id); setSelectedIds(new Set()); onBrandIconChange(config.settings.brandIconUrl ?? "/favicon.svg"); setEditing(null); setEditorOpen(false); setDraft(blankDraft(config.categories[0])); }
 
   function applyConfigPreservingContext(config: PortalConfig) {
     setSites(config.sites); setCategories(config.categories); setFolders(config.folders); setSettings(config.settings);
@@ -115,7 +127,7 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
         setSites((current) => [...current, site]);
         setMessage("网站已加入首页。");
       }
-      setEditing(null); setDraft(blankDraft(categories[0]));
+      setEditing(null); setDraft(blankDraft(categories[0])); setEditorOpen(false);
     } catch (error) { setMessage(error instanceof Error ? error.message : "保存失败，请稍后重试。"); }
     finally { setBusy(false); }
   }
@@ -268,7 +280,7 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
     finally { setBusy(false); }
   }
 
-  async function logout() { await portalApi.logout(); setAuthenticated(false); setSites([]); setEditing(null); setDraft(blankDraft(categories[0])); setPendingImport(null); setPendingBookmarks(null); setRollbackAvailable(false); }
+  async function logout() { await portalApi.logout(); setAuthenticated(false); setSites([]); setEditing(null); setEditorOpen(false); setDraft(blankDraft(categories[0])); setPendingImport(null); setPendingBookmarks(null); setRollbackAvailable(false); }
   const change = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((current) => ({ ...current, [key]: value }));
 
   async function savePortalConfig(nextCategories = categories, nextFolders = folders, nextSettings = settings) {
@@ -321,7 +333,7 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
     return ([true, false] as const).map((pinned) => {
       const ordered = groupSites.filter((site) => site.pinned === pinned && filteredSiteIds.has(site.id)).sort((a, b) => a.order - b.order);
       if (!ordered.length) return null;
-      return <div className="manage-site-priority" key={`${groupKey}-${pinned}`}><p className="manage-site-group-label">{pinned ? "置顶" : "普通"}</p>{ordered.map((site, index) => <article className={`manage-site${draggedId === site.id ? " is-dragging" : ""}${dragOverId === site.id ? " is-drag-over" : ""}`} key={site.id} onDragOver={(event) => dragOver(event, site)} onDrop={(event) => drop(event, site)}><label className="manage-site-select"><input type="checkbox" checked={selectedIds.has(site.id)} onChange={() => toggleSelection(site.id)} aria-label={`选择 ${site.name}`} /></label><button className="manage-drag-handle" type="button" draggable={!busy} onDragStart={(event) => dragStart(event, site)} onDragEnd={() => { setDraggedId(null); setDragOverId(null); }} aria-label={`拖动排序 ${site.name}`} title="拖动排序"><GripVertical size={16} /></button><div className="manage-site-copy"><strong>{site.name}{site.visibility === "private" && <small>私密</small>}</strong><span>{site.hostname}</span></div><div className="manage-site-actions"><button type="button" onClick={() => move(site, -1)} disabled={busy || index === 0} aria-label={`上移 ${site.name}`}><ArrowUp size={15} /></button><button type="button" onClick={() => move(site, 1)} disabled={busy || index === ordered.length - 1} aria-label={`下移 ${site.name}`}><ArrowDown size={15} /></button><button type="button" onClick={() => { setEditing(site); setDraft(toDraft(site)); setMessage(""); }} aria-label={`编辑 ${site.name}`}><Pencil size={15} /></button><button type="button" className="manage-delete" onClick={() => void remove(site)} aria-label={`移除 ${site.name}`}><Trash2 size={15} /></button></div></article>)}</div>;
+      return <div className="manage-site-priority" key={`${groupKey}-${pinned}`}><p className="manage-site-group-label">{pinned ? "置顶" : "普通"}</p>{ordered.map((site, index) => <article className={`manage-site${draggedId === site.id ? " is-dragging" : ""}${dragOverId === site.id ? " is-drag-over" : ""}`} key={site.id} onDragOver={(event) => dragOver(event, site)} onDrop={(event) => drop(event, site)}><label className="manage-site-select"><input type="checkbox" checked={selectedIds.has(site.id)} onChange={() => toggleSelection(site.id)} aria-label={`选择 ${site.name}`} /></label><button className="manage-drag-handle" type="button" draggable={!busy} onDragStart={(event) => dragStart(event, site)} onDragEnd={() => { setDraggedId(null); setDragOverId(null); }} aria-label={`拖动排序 ${site.name}`} title="拖动排序"><GripVertical size={16} /></button><div className="manage-site-copy"><strong>{site.name}{site.visibility === "private" && <small>私密</small>}</strong><span>{site.hostname}</span></div><div className="manage-site-actions"><button type="button" onClick={() => move(site, -1)} disabled={busy || index === 0} aria-label={`上移 ${site.name}`}><ArrowUp size={15} /></button><button type="button" onClick={() => move(site, 1)} disabled={busy || index === ordered.length - 1} aria-label={`下移 ${site.name}`}><ArrowDown size={15} /></button><button type="button" onClick={() => { setEditing(site); setDraft(toDraft(site)); setMessage(""); setEditorOpen(true); }} aria-label={`编辑 ${site.name}`} title="编辑"><Pencil size={15} /></button><button type="button" className="manage-delete" onClick={() => void remove(site)} aria-label={`移除 ${site.name}`} title="删除"><Trash2 size={15} /></button></div></article>)}</div>;
     });
   }
 
@@ -365,12 +377,14 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
         <header className="manage-header"><div><p className="portal-kicker">Private management</p><h1 id="manage-title">管理入口</h1><p>在线维护你的公开站点入口。</p></div><div className="manage-header-actions"><PortalBackgroundSettings target="管理页" currentUrl={background} onApply={(url) => setBackground(portalManageBackgroundStore.set(url))} onReset={() => { portalManageBackgroundStore.clear(); setBackground(null); }} /><PortalImageSettings currentUrl={settings.brandIconUrl ?? null} onApply={(url) => saveBrandIcon(url)} onReset={() => saveBrandIcon()} triggerLabel="品牌头像" dialogTitle="设置品牌头像" dialogDescription="这个头像会同步到 HFDZ 顶栏和浏览器标签。" helpText="仅接受 HTTPS；保存到首页配置后会同步所有访客和设备。" emptyPreviewText="粘贴图片直链后可先预览" previewAlt="HFDZ 品牌头像预览" applyLabel="应用头像" previewShape="square" validationLabel="品牌头像" /><Link className="manage-quiet" to="/"><ArrowLeft size={16} aria-hidden="true" />返回首页</Link><button className="manage-quiet" onClick={() => void logout()}><LogOut size={16} aria-hidden="true" />退出</button></div></header>
         <nav className="manage-sidebar" aria-label="管理分区">{([["sites", "网站入口", Link2], ["catalog", "分类与文件夹", FolderTree], ["appearance", "外观设置", Image], ["backup", "导入与备份", Download]] as const).map(([id, label, Icon]) => <button type="button" key={id} className={manageSection === id ? "is-active" : ""} aria-current={manageSection === id ? "page" : undefined} onClick={() => setManageSection(id)}><Icon size={17} aria-hidden="true" /><span>{label}</span><small>{id === "sites" ? sites.length : id === "catalog" ? categories.length + folders.length : ""}</small></button>)}</nav>
         {configError && <p className="manage-config-error" role="alert">{configError}</p>}
+        {manageSection === "sites" && <button type="button" className="manage-primary manage-add-site manage-add-site-top" onClick={() => { setEditing(null); setDraft(blankDraft(categories[0])); setMessage(""); setEditorOpen(true); }}><Plus size={16} />添加网站</button>}
         <div className={`manage-workspace manage-section-${manageSection}`}>
         <div className="manage-list-tools"><div className="manage-filter-bar"><input type="search" value={filterQuery} onChange={(event) => setFilterQuery(event.target.value)} placeholder="搜索网站、域名、分类或文件夹" aria-label="搜索网站" /><select value={filterCategoryId} onChange={(event) => setFilterCategoryId(event.target.value)} aria-label="按分类筛选"><option value="all">全部分类</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name} · {sites.filter((site) => site.categoryId === category.id).length}</option>)}</select><label className="manage-check"><input type="checkbox" checked={rootOnly} onChange={(event) => setRootOnly(event.target.checked)} />只看未分文件夹</label><button type="button" onClick={() => setSelectedIds(new Set(filteredSites.map((site) => site.id)))} disabled={!filteredSites.length}>选择当前结果</button><button type="button" onClick={() => setSelectedIds(new Set())} disabled={!selectedIds.size}>清空选择</button></div>{selectedIds.size > 0 && <div className="manage-bulk-bar"><strong>已选择 {selectedIds.size} 个网站</strong><select value={targetCategoryId} onChange={(event) => { setTargetCategoryId(event.target.value); setTargetFolderId(""); }} aria-label="目标分类">{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select><select value={targetFolderId} onChange={(event) => setTargetFolderId(event.target.value)} aria-label="目标文件夹"><option value="">根目录</option>{folders.filter((folder) => folder.categoryId === targetCategoryId).map((folder) => <option key={folder.id} value={folder.id}>{folder.name}</option>)}</select><button type="button" className="manage-primary" onClick={() => void bulkMove([...selectedIds], targetCategoryId, targetFolderId || null)} disabled={busy}>移动</button></div>}</div>
         <div className="manage-move-targets" aria-label="拖放移动目标">{categories.map((category) => <div key={category.id}><strong>{category.name} {sites.filter((site) => site.categoryId === category.id).length}</strong><button type="button" onDragOver={(event) => event.preventDefault()} onDrop={(event) => dropInto(event, category.id)}>未分文件夹 {sites.filter((site) => site.categoryId === category.id && !site.folderId).length}</button>{folders.filter((folder) => folder.categoryId === category.id).map((folder) => <button type="button" key={folder.id} onDragOver={(event) => event.preventDefault()} onDrop={(event) => dropInto(event, category.id, folder.id)}>{folder.name} {sites.filter((site) => site.folderId === folder.id).length}</button>)}</div>)}</div>
         <div className="manage-layout">
-          <form className="manage-editor" onSubmit={save}>
-            <div className="manage-editor-heading"><div><h2>{editing ? "编辑网站" : "添加网站"}</h2><p>保存后首页会立即读取新列表。</p></div>{editing && <button type="button" className="manage-icon-button" aria-label="取消编辑" onClick={() => { setEditing(null); setDraft(blankDraft(categories[0])); }}><X size={17} /></button>}</div>
+          {editorOpen && <button className="manage-drawer-backdrop" type="button" aria-label="关闭网站编辑面板" onClick={() => { if (!busy) setEditorOpen(false); }} />}
+          <form ref={editorPanel} className={`manage-editor manage-site-editor${editorOpen ? " is-open" : ""}`} onSubmit={save} aria-hidden={!editorOpen} role="dialog" aria-modal={editorOpen || undefined} aria-label={editing ? "编辑网站" : "添加网站"}>
+            <div className="manage-editor-heading"><div><p className="manage-editor-eyebrow">网站入口</p><h2>{editing ? "编辑网站" : "添加网站"}</h2><p>保存后首页会立即读取新列表。</p></div><button type="button" className="manage-icon-button" aria-label="关闭编辑面板" onClick={() => { if (!busy) { setEditing(null); setEditorOpen(false); setDraft(blankDraft(categories[0])); } }}><X size={17} /></button></div>
             <label>网站地址<span className="manage-url-row"><input type="url" placeholder="https://example.com" value={draft.url} onChange={(event) => change("url", event.target.value)} required /><button type="button" onClick={() => void recognizeSite()} disabled={busy || metadataBusy || !draft.url.trim()}><ScanSearch size={16} />{metadataBusy ? "识别中…" : "识别网站"}</button></span></label>
             <label>网站名称<input maxLength={80} value={draft.name} onChange={(event) => change("name", event.target.value)} required /></label>
             <label>简介<input maxLength={180} value={draft.description} onChange={(event) => change("description", event.target.value)} required /></label>
