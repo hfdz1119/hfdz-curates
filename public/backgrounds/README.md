@@ -1,6 +1,8 @@
 # HFDZ Home background
 
-将自定义背景图片放在本目录并命名为 `home-background.webp`，刷新页面即可生效，无需修改组件。
+项目内置 `hfdz-default-desktop.jpg` 和 `hfdz-default-mobile.jpg`，分别用于电脑和移动端；即使图床地址失效，也会自动回退到当前设备对应的默认背景。
+
+如需替换项目默认背景，请保留桌面端和移动端两个文件名，或同步修改 `src/data/portalAppearance.ts`。
 
 建议：
 

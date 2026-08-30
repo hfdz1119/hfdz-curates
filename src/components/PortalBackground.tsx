@@ -4,13 +4,23 @@ import type { PortalBackgroundConfig } from "../stores/portalBackground";
 type PortalBackgroundProps = {
   src: string | PortalBackgroundConfig;
   fallbackSrc?: string;
+  mobileSrc?: string;
 };
 
-export function PortalBackground({ src, fallbackSrc }: PortalBackgroundProps) {
+export function PortalBackground({ src, fallbackSrc, mobileSrc }: PortalBackgroundProps) {
   const [loaded, setLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.matchMedia("(max-width: 620px)").matches);
   const config = typeof src === "string" ? null : src;
-  const sourceUrl = typeof src === "string" ? src : src.url;
+  const sourceUrl = typeof src === "string" ? (isMobile && mobileSrc ? mobileSrc : src) : src.url;
   const [activeSrc, setActiveSrc] = useState(sourceUrl);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 620px)");
+    const update = () => setIsMobile(query.matches);
+    update();
+    query.addEventListener?.("change", update);
+    return () => query.removeEventListener?.("change", update);
+  }, []);
 
   useEffect(() => {
     setLoaded(false);
@@ -26,7 +36,8 @@ export function PortalBackground({ src, fallbackSrc }: PortalBackgroundProps) {
       onLoad={() => setLoaded(true)}
       onError={() => {
         setLoaded(false);
-        if (fallbackSrc && activeSrc !== fallbackSrc) setActiveSrc(fallbackSrc);
+        const fallback = isMobile && mobileSrc ? mobileSrc : fallbackSrc;
+        if (fallback && activeSrc !== fallback) setActiveSrc(fallback);
       }}
     />
   </div>;

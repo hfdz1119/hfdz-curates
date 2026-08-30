@@ -354,7 +354,7 @@ export function ManagePage({ onBrandIconChange }: { onBrandIconChange: (url: str
   }
 
   return <main className="portal-page portal-manage-page" id="main-content" data-portal-palette={palette} data-root-only={rootOnly || undefined} data-manage-section={manageSection}>
-    <PortalBackground src={background ?? portalAppearance.backgroundImage} fallbackSrc={portalAppearance.backgroundImage} />
+    <PortalBackground src={background ?? portalAppearance.backgroundImage} fallbackSrc={portalAppearance.backgroundImage} mobileSrc={portalAppearance.mobileBackgroundImage} />
     <section className="portal-glass manage-glass" aria-labelledby="manage-title">
       {authenticated === null ? <p className="manage-loading">正在确认管理会话…</p> : !authenticated ? <form className="manage-login" onSubmit={login}>
         <p className="portal-kicker">Private management</p><h1 id="manage-title">管理入口</h1><p>登录后可在线维护首页网站；公开访客不会看到此页面的内容。</p>

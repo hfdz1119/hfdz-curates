@@ -37,7 +37,7 @@ export function PortalPage() {
   };
 
   return <main className="portal-page" id="main-content" data-portal-palette={palette}>
-    <PortalBackground src={customBackgroundUrl ?? portalAppearance.backgroundImage} fallbackSrc={portalAppearance.backgroundImage} />
+    <PortalBackground src={customBackgroundUrl ?? portalAppearance.backgroundImage} fallbackSrc={portalAppearance.backgroundImage} mobileSrc={portalAppearance.mobileBackgroundImage} />
     <section className="portal-glass" aria-labelledby="portal-title">
       <div className="portal-appearance-controls" aria-label="首页外观">
         <PortalPalettePicker value={palette} onChange={changePalette} />

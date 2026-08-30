@@ -34,7 +34,8 @@ describe("HFDZ Home portal sites", () => {
     }
   });
 
-  it("uses a user-managed local WebP background", () => {
-    expect(portalAppearance.backgroundImage).toBe("/backgrounds/home-background.webp");
+  it("uses local desktop and mobile fallback backgrounds", () => {
+    expect(portalAppearance.backgroundImage).toBe("/backgrounds/hfdz-default-desktop.jpg");
+    expect(portalAppearance.mobileBackgroundImage).toBe("/backgrounds/hfdz-default-mobile.jpg");
   });
 });
