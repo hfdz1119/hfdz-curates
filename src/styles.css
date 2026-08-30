@@ -874,6 +874,85 @@ footer { display: flex; justify-content: space-between; gap: 14px; margin-top: 7
 .portal-background img { object-position: var(--portal-bg-x, 50%) var(--portal-bg-y, 50%); filter: blur(var(--portal-bg-blur, 0)); transform: scale(var(--portal-bg-scale, 1.015)); }
 .portal-background[style]::after { background: #03060c; opacity: var(--portal-overlay-custom, .38); }
 .portal-background-preview { position: relative; overflow: hidden; }
+
+/* Final surface pass: neutral glass keeps the wallpaper present without sacrificing contrast. */
+.portal-start-page {
+  --portal-toolbar-glass: rgb(248 250 252 / 82%);
+  --portal-widget-glass: rgb(248 250 252 / 76%);
+  --portal-category-glass: rgb(248 250 252 / 78%);
+  --portal-card-glass: rgb(248 250 252 / 72%);
+  --portal-card-glass-hover: rgb(255 255 255 / 88%);
+  --portal-glass-border: rgb(15 23 42 / 18%);
+  --portal-card-glass-border: rgb(15 23 42 / 14%);
+  --portal-widget-text: #172033;
+  --portal-widget-secondary: #334155;
+  --portal-widget-muted: #475569;
+}
+:root[data-theme="dark"] .portal-start-page {
+  --portal-toolbar-glass: rgb(15 20 29 / 82%);
+  --portal-widget-glass: rgb(15 20 29 / 76%);
+  --portal-category-glass: rgb(15 20 29 / 78%);
+  --portal-card-glass: rgb(15 20 29 / 72%);
+  --portal-card-glass-hover: rgb(25 32 44 / 88%);
+  --portal-glass-border: rgb(226 232 240 / 18%);
+  --portal-card-glass-border: rgb(226 232 240 / 14%);
+}
+.portal-start-page .portal-toolbar,
+.portal-start-page .portal-widget,
+.portal-start-page .portal-categories,
+.portal-start-page .portal-link {
+  backdrop-filter: blur(20px) saturate(112%);
+  -webkit-backdrop-filter: blur(20px) saturate(112%);
+}
+.portal-start-page .portal-toolbar { box-shadow: 0 1px 0 rgb(255 255 255 / 65%) inset, 0 14px 30px rgb(15 23 42 / 14%); }
+.portal-start-page .portal-link { color: var(--text-primary); text-shadow: none; }
+.portal-start-page .portal-description { color: var(--portal-widget-secondary); }
+.portal-start-page .portal-hostname { color: var(--portal-widget-muted); }
+:root[data-theme="dark"] .portal-start-page .portal-description { color: var(--portal-widget-secondary); }
+:root[data-theme="dark"] .portal-start-page .portal-hostname { color: var(--portal-widget-muted); }
+.portal-start-page .portal-search { background: rgb(255 255 255 / 74%); color: #172033; }
+:root[data-theme="dark"] .portal-start-page .portal-search { background: rgb(5 8 14 / 60%); color: var(--text-primary); }
+
+/* Operator workspace: one active surface at a time, with a compact persistent rail. */
+.manage-sidebar { float: left; display: grid; width: 196px; gap: 4px; padding: 8px; border: 1px solid var(--border-subtle); border-radius: 10px; background: color-mix(in srgb, var(--surface-elevated) 88%, transparent); }
+.manage-sidebar button { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; min-height: 40px; gap: 8px; padding: 0 10px; border: 1px solid transparent; border-radius: 6px; background: transparent; color: var(--text-secondary); text-align: left; }
+.manage-sidebar button:hover, .manage-sidebar button.is-active { border-color: color-mix(in srgb, var(--portal-accent) 30%, var(--border-subtle)); background: color-mix(in srgb, var(--portal-accent) 9%, transparent); color: var(--text-primary); }
+.manage-sidebar small { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.manage-workspace, .manage-category-privacy, .manage-config-grid { margin-left: 216px; }
+.manage-config-error { clear: both; margin: 10px 0 0 216px; color: var(--state-error); font-size: var(--text-sm); }
+.manage-workspace { min-width: 0; }
+.portal-manage-page[data-manage-section="sites"] .manage-category-privacy,
+.portal-manage-page[data-manage-section="sites"] .manage-config-grid,
+.portal-manage-page[data-manage-section="appearance"] .manage-workspace,
+.portal-manage-page[data-manage-section="appearance"] .manage-category-privacy,
+.portal-manage-page[data-manage-section="catalog"] .manage-workspace,
+.portal-manage-page[data-manage-section="backup"] .manage-workspace,
+.portal-manage-page[data-manage-section="backup"] .manage-category-privacy { display: none; }
+.portal-manage-page[data-manage-section="appearance"] .manage-config-grid > section:nth-child(-n + 2),
+.portal-manage-page[data-manage-section="appearance"] .manage-config-grid > section:nth-child(4),
+.portal-manage-page[data-manage-section="catalog"] .manage-config-grid > section:nth-child(3),
+.portal-manage-page[data-manage-section="catalog"] .manage-config-grid > section:nth-child(4),
+.portal-manage-page[data-manage-section="backup"] .manage-config-grid > section:nth-child(-n + 3) { display: none; }
+.portal-manage-page[data-manage-section="sites"] .manage-config-error { display: none; }
+.manage-config-grid { grid-template-columns: 1fr; }
+.manage-config-grid > section { min-width: 0; }
+.manage-inline-add { grid-template-columns: minmax(0, 1fr) minmax(130px, .7fr) auto; }
+.manage-config-section .manage-primary { width: 100%; }
+.manage-editor, .manage-list, .manage-login { background: color-mix(in srgb, var(--surface-base) 92%, var(--surface-elevated)); box-shadow: 0 1px 0 rgb(255 255 255 / 55%) inset, 0 12px 30px rgb(15 23 42 / 8%); }
+:root[data-theme="dark"] .manage-editor, :root[data-theme="dark"] .manage-list, :root[data-theme="dark"] .manage-login { box-shadow: 0 1px 0 rgb(255 255 255 / 8%) inset, 0 16px 32px rgb(0 0 0 / 22%); }
+
+@media (max-width: 960px) {
+  .manage-sidebar { float: none; width: 100%; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 12px; }
+  .manage-sidebar button { grid-template-columns: 20px minmax(0, 1fr); }
+  .manage-sidebar small { display: none; }
+  .manage-workspace, .manage-category-privacy, .manage-config-grid, .manage-config-error { margin-left: 0; }
+}
+@media (max-width: 620px) {
+  .manage-sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manage-sidebar button { min-height: 44px; }
+  .manage-inline-add { grid-template-columns: 1fr; }
+  .manage-inline-add button { width: 100%; }
+}
 .portal-background-preview img { width: 100%; height: 100%; object-fit: cover; object-position: var(--preview-x, 50%) var(--preview-y, 50%); filter: blur(var(--preview-blur, 0)); transform: scale(var(--preview-scale, 1)); }
 .portal-background-preview i { position: absolute; inset: 0; background: #03060c; opacity: var(--preview-overlay, .38); pointer-events: none; }
 .portal-background-preview[data-glass-strength="light"] i { backdrop-filter: blur(4px); }
