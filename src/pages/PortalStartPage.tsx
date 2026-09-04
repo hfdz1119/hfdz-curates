@@ -19,7 +19,7 @@ import { portalPaletteStore } from "../stores/portalPalette";
 import { defaultPortalHomePreferences, portalHomePreferencesStore, type PortalHomePreferences } from "../stores/portalHomePreferences";
 import { PortalSettingsCenter } from "../components/PortalSettingsCenter";
 
-const searchLabels: Record<SearchMode, string> = { local: "本地", google: "Google", bing: "Bing", duckduckgo: "DuckDuckGo" };
+const searchLabels: Record<SearchMode, string> = { local: "本地", google: "Google", bing: "Bing", baidu: "百度", duckduckgo: "百度" };
 
 function SortableCategory({ category, active, enabled, onSelect }: { category: PortalCategory; active: boolean; enabled: boolean; onSelect: () => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: category.id, disabled: !enabled });
